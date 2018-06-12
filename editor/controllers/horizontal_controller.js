@@ -98,7 +98,8 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
   }
   $scope.formValidation = function() {
     $scope.submitted = true;
-    var formValid = $scope.ftbForm.$valid && /\[\[.*?\]\]/g.test($scope.ftbFormData.question.text);
+    var ftbFormValid = $scope.ftbFormData.question.text.length;
+    var formValid = (ftbFormValid > 0) && /\[\[.*?\]\]/g.test($scope.ftbFormData.question.text);
     if (formValid) {
       return true;
     } else {
