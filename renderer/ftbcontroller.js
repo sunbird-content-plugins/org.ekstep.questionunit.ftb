@@ -1,4 +1,7 @@
 var FTBController = {};
+FTBController.initTemplate = function (pluginInstance) {
+  FTBController.pluginInstance = pluginInstance;
+};
 FTBController.constant = {
   qsFtbElement: "#ftb-template",
   qsFtbContainer: ".qs-ftb-container",
@@ -12,7 +15,17 @@ FTBController.template = '<div id="ftb-template">\
   <div class="qs-ftb-container">\
     <div class="qs-ftb-content">\
         <div class="qs-ftb-question" id="qs-ftb-question">\
-          <%= question.data.question.text %>\
+        <% if ( question.data.question.image.length > 0 ){ %> \
+          <div class="ftb-question-image">\
+            <img onclick="FTBController.showImageModel(event)" src=<%=FTBController.pluginInstance.getAssetUrl( question.data.question.image) %>> \
+          </div>\
+           <% } %> \
+           <% if ( question.data.question.audio.length > 0 ){ %> \
+            <div class="ftb-question-audio">\
+            <img src=<%=FTBController.pluginInstance.getAudioIcon() %> onclick=FTBController.pluginInstance.playAudio("<%= question.data.question.audio %>") > \
+              </div>\
+             <% } %> \
+           <%= question.data.question.text %>\
         </div>\
     </div>\
   </div>\
@@ -72,6 +85,26 @@ FTBController.keyboardCallback = function(ans) { // eslint-disable-line no-unuse
 };
 
 /**
+   * image will be shown in popup
+   * @memberof org.ekstep.questionunit.mcq.template_controller
+   */
+  FTBController.showImageModel = function () {
+    var eventData = event.target.src;
+    var modelTemplate = "<div class='popup' id='image-model-popup' onclick='FTBController.hideImageModel()'><div class='popup-overlay' onclick='FTBController.hideImageModel()'></div> \
+    <div class='popup-full-body'> \
+    <div class='font-lato assess-popup assess-goodjob-popup'> \
+     <img class='qc-question-fullimage' src=<%= src %> /> \
+      <div onclick='FTBController.hideImageModel()' class='qc-popup-close-button'>X</div> \
+      <div  class='qc-popup-close-button'>X</div> \
+    </div></div>";
+    var template = _.template(modelTemplate);
+    var templateData = template({
+      src: eventData
+    })
+    $(FTBController.constant.qsFtbElement).append(templateData);
+  },
+
+/**
  * renderer:questionunit.ftb:get currentQuesData.
  * @event renderer:questionunit.ftb:doTextBoxHandle
  * @param {Object} quesData object without HTML
@@ -115,6 +148,10 @@ window.addEventListener('native.keyboardhide', function() {
 
 FTBController.logTelemetryInteract = function(event) {
   QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.TOUCH, { type: QSTelemetryLogger.EVENT_TYPES.TOUCH, id: event.target.id }); // eslint-disable-line no-undef
+};
+
+FTBController.hideImageModel = function () {
+  $("#image-model-popup").remove();
 };
 
 //# sourceURL=FTBController.js

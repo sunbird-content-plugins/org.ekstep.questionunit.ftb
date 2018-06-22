@@ -24,6 +24,45 @@
   width: 100%;
 }
 
+.qs-ftb-question p{
+  float:right;
+}
+
+.qs-ftb-question .ftb-question-image img{
+  max-width:100%;
+  width:100%;
+}
+
+img.qc-question-fullimage {
+  width: 83%;
+  height: 100%;
+  float:left;
+}
+
+.qc-popup-close-button {
+  position: absolute;
+  right: -35px;
+  color: white;
+  bottom: 87%;
+}
+
+.ftb-question-image {
+  float:left;
+  width:9vw;
+  height: 9vw;
+}
+
+.ftb-question-audio {
+  float:right;
+  width:9vw;
+  height: 9vw;
+}
+
+.ftb-question-audio img{
+  max-width: 100%;
+  width:100%;
+}
+
 .align-question {
   margin: 33px 0px 0px 2px;
   height: 25vh;

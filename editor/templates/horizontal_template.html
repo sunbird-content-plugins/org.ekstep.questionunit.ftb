@@ -16,6 +16,21 @@
                                             </textarea>
                                         </div>
                                     </div>
+                                    <div class="six column row">
+                                        <div class="two wide column" ng-if="ftbFormData.question.image.length > 0">
+                                          <img src="{{ftbFormData.question.image}}" class="imgWidth" ng-click="addImage()"/>
+                                        </div>
+                                        <div class="one wide column" ng-if="ftbFormData.question.image.length > 0">
+                                           <a href="" ng-click="deleteImage();generateTelemetry({type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-delete-image', ver: '', type: 'button'}})" class="deleteMedia" data-tooltip="Delete image" data-inverted=""><i class="trash large icon delete-icon"></i></a>
+                                        </div>
+                                        <div class="one wide column" ng-if="ftbFormData.question.audio.length > 0">
+                                          <audio src="{{ftbFormData.question.audio}}" controls  controlsList="nodownload" preload="none" class="audio-container myAudio" ng-click="addAudio()" data-tooltip="Play audio" data-inverted="">
+                                          </audio>
+                                        </div>
+                                        <div class="one wide column" ng-if="ftbFormData.question.audio.length > 0">
+                                          <a href="" ng-click="deleteAudio();generateTelemetry({type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-delete-audio', ver: '', type: 'button'}});" class="deleteMedia" data-tooltip="Delete audio" data-inverted=""><i class="trash large icon delete-icon"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="ui secondary right aligned segment custom-sec-segment" ng-if="ftbConfiguartion.questionConfig.isImage || ftbConfiguartion.questionConfig.isAudio">
@@ -23,8 +38,8 @@
                                     <div class="one column row segment-column">
                                         <div class="column right floated">
                                             <span class="custom-bottom-label">Add: </span>
-                                            <span class="custom-bottom-segment"><i class="image large icon"></i></span>
-                                            <span class="custom-bottom-segment"><i class="music large icon"></i></span>
+                                            <span class="custom-bottom-segment ui icon" ng-if="ftbFormData.question.image.length <= 0" data-tooltip="Add image" data-inverted="" ng-click="addImage();generateTelemetry({type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-add-image', ver: '', type: 'button'}});"><i class="image large icon"></i></span>
+                                            <span class="custom-bottom-segment ui icon" ng-if="ftbFormData.question.audio.length <= 0" data-tooltip="Add audio" data-inverted="" ng-click="addAudio('q');generateTelemetry({type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-add-audio', ver: '', type: 'button'}})"><i class="music large icon"></i></span>
                                         </div>
                                     </div>
                                 </div>
