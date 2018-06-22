@@ -13,8 +13,8 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
   $scope.ftbConfiguartion = {
     'questionConfig': {
       'isText': true,
-      'isImage': false,
-      'isAudio': false,
+      'isImage': true,
+      'isAudio': true,
       'isHint': false
     }
   };
@@ -122,6 +122,52 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
       }
     })
   }
+
+
+      $scope.addImage = function () {
+      ecEditor.dispatchEvent('org.ekstep.assetbrowser:show', {
+        type: 'image',
+        search_filter: {}, // All composite keys except mediaType
+        callback: function (data) {
+          var tempImage = {
+            "id": Math.floor(Math.random() * 1000000000), // Unique identifier
+            "src": org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src), // Media URL
+            "assetId": data.assetMedia.id, // Asset identifier
+            "type": "image", // Type of asset (image, audio, etc)
+            "preload": false // true or false
+          };
+          $scope.ftbFormData.question.image = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
+        }
+      });
+    }
+
+    $scope.addAudio = function () {
+      ecEditor.dispatchEvent('org.ekstep.assetbrowser:show', {
+        type: 'audio',
+        search_filter: {}, // All composite keys except mediaType
+        callback: function (data) {
+          var tempAudio = {
+            "id": Math.floor(Math.random() * 1000000000), // Unique identifier
+            "src": org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src), // Media URL
+            "assetId": data.assetMedia.id, // Asset identifier
+            "type": "audio", // Type of asset (image, audio, etc)
+            "preload": false // true or false
+          };
+          
+          $scope.ftbFormData.question.audio = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
+        }
+      });
+    }
+
+    $scope.deleteImage = function () {
+        $scope.mcqFormData.question.image = '';
+        delete $scope.questionMedia.image;
+    }
+    $scope.deleteAudio = function () {
+        $scope.isPlayingQ = false;
+        $scope.ftbFormData.question.audio = '';
+        delete $scope.questionMedia.audio;
+    }
 
 }]);
 //# sourceURL=horizontalFTB.js
