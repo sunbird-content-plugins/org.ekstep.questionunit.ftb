@@ -16,13 +16,23 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
    * @memberof org.ekstep.questionunit.ftb
    */
   setQuestionTemplate: function () {
-    this._question.template = FTBController.template; // eslint-disable-line no-undef
+    this._question.template = FTBController.getQuestionTemplate(); // eslint-disable-line no-undef
     FTBController.initTemplate(this);// eslint-disable-line no-undef
   },
+  /**
+   * Listen show event
+   * @memberof org.ekstep.questionunit.ftb
+   * @param {Object} event from question set.
+   */
   preQuestionShow: function(event) {
     this._super(event);
     this._question.data = FTBController.generateHTML(this._question.data); // eslint-disable-line no-undef
   },
+  /**
+   * Listen event after display the question
+   * @memberof org.ekstep.questionunit.ftb
+   * @param {Object} event from question set.
+   */
   postQuestionShow: function(event) { // eslint-disable-line no-unused-vars
     FTBController.question = this._question; // eslint-disable-line no-undef
 
@@ -34,7 +44,11 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
     if (this._question.state && this._question.state.val) {
       FTBController.setStateInput(); // eslint-disable-line no-undef
     }
-  },
+  },  /**
+  * Hides the keyboard
+  * @memberof org.ekstep.questionunit.ftb
+  * @param {Object} event from question set.
+  */
   postHideQuestion: function() {
     EkstepRendererAPI.dispatchEvent("org.ekstep.keyboard:hide");
   },
@@ -97,48 +111,6 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
 
     QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.RESPONSE, { "type": "INPUT", "values": telemetryAnsArr }); // eslint-disable-line no-undef
     QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.ASSESSEND, result); // eslint-disable-line no-undef
-  },
-
-  /**
-   * provide media url to audio image
-   * @memberof org.ekstep.questionunit.mcq
-   * @returns {String} url.
-   */
-  getAudioIcon:function(){
-    return this.getAssetUrl(org.ekstep.pluginframework.pluginManager.resolvePluginResource(this._manifest.id, this._manifest.ver, "renderer/assets/audio.png"));
-  },
-   /**
-   * provide media url to asset
-   * @memberof org.ekstep.questionunit.mcq
-   * @param {String} url from question set.
-   * @returns {String} url.
-   */
-  getAssetUrl:function(url){
-    if(isbrowserpreview){// eslint-disable-line no-undef
-      return url;
   }
-    else{
-      return 'file:///' + EkstepRendererAPI.getBaseURL()+ url;
-    }
-  },
-  /**
-   * play audio once at a time
-   * @memberof org.ekstep.questionunit.mcq
-   * @param {String} audio from question set.
-   */
-  playAudio: function (audio) {
-    audio = this.getAssetUrl(audio);
-    if (this._lastAudio && (this._lastAudio != audio)) { // eslint-disable-line no-undef
-      this._currentAudio.pause(); // eslint-disable-line no-undef
-    }
-    if (!this._currentAudio || this._currentAudio.paused) { // eslint-disable-line no-undef
-      this._currentAudio = new Audio(audio); // eslint-disable-line no-undef
-      this._currentAudio.play(); // eslint-disable-line no-undef
-      this._lastAudio = audio; // eslint-disable-line no-undef
-    } else {
-      this._currentAudio.pause(); // eslint-disable-line no-undef
-      this._currentAudio.currentTime = 0 // eslint-disable-line no-undef
-    }
-  },
 });
 //# sourceURL=questionunitFtbRendererPlugin.js

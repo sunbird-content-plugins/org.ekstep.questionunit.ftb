@@ -11,30 +11,34 @@ FTBController.constant = {
 FTBController.textboxtarget = {};
 FTBController.question = undefined;
 
-FTBController.template = '<div id="ftb-template">\
-  <div class="qs-ftb-container">\
-    <div class="qs-ftb-content">\
-        <div class="qs-ftb-question" id="qs-ftb-question">\
-        <% if ( question.data.question.image.length > 0 ){ %> \
-          <div class="ftb-question-image">\
-            <img onclick="FTBController.showImageModel(event)" src=<%=FTBController.pluginInstance.getAssetUrl( question.data.question.image) %>> \
+FTBController.getQuestionTemplate = function(){
+  return '<div id="ftb-template">\
+    <div class="qs-ftb-container">\
+      <div class="qs-ftb-content">\
+          <div class="qs-ftb-question" id="qs-ftb-question">\
+          <% if ( question.data.question.image.length > 0 ){ %> \
+            <div class="ftb-question-image">\
+              <img onclick="FTBController.showImageModel(event)" src=<%=FTBController.pluginInstance.getAssetUrl( question.data.question.image) %>> \
+            </div>\
+            <% } %> \
+            <% if ( question.data.question.audio.length > 0 ){ %> \
+              <div class="ftb-question-audio">\
+              <img src=<%=FTBController.pluginInstance.getAudioIcon() %> onclick=FTBController.pluginInstance.playAudio("<%= question.data.question.audio %>") > \
+                </div>\
+              <% } %> \
+            <%= question.data.question.text %>\
           </div>\
-           <% } %> \
-           <% if ( question.data.question.audio.length > 0 ){ %> \
-            <div class="ftb-question-audio">\
-            <img src=<%=FTBController.pluginInstance.getAudioIcon() %> onclick=FTBController.pluginInstance.playAudio("<%= question.data.question.audio %>") > \
-              </div>\
-             <% } %> \
-           <%= question.data.question.text %>\
-        </div>\
+      </div>\
     </div>\
-  </div>\
-</div>';
+  </div>';
+} 
 
-FTBController.answerTemplate = '<% if(ansFieldConfig.keyboardType != "undefined" && (ansFieldConfig.keyboardType == "English" || ansFieldConfig.keyboardType == "Custom")) %> \
-<input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" readonly style="cursor: pointer;" onclick="FTBController.logTelemetryInteract(event);">\
-<% else %> \
-<input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" onclick="FTBController.logTelemetryInteract(event);">';
+FTBController.answerTemplate = function(){
+  return '<% if(ansFieldConfig.keyboardType != "undefined" && (ansFieldConfig.keyboardType == "English" || ansFieldConfig.keyboardType == "Custom")) %> \
+  <input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" readonly style="cursor: pointer;" onclick="FTBController.logTelemetryInteract(event);">\
+  <% else %> \
+  <input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" onclick="FTBController.logTelemetryInteract(event);">';
+}
 
 
 /**
@@ -84,9 +88,9 @@ FTBController.keyboardCallback = function(ans) { // eslint-disable-line no-unuse
   $(FTBController.constant.qsFtbContainer).removeClass("align-question");
 };
 
-/**
+  /**
    * image will be shown in popup
-   * @memberof org.ekstep.questionunit.mcq.template_controller
+   * @memberof org.ekstep.questionunit.ftb.ftbcontroller
    */
   FTBController.showImageModel = function () {
     var eventData = event.target.src;
@@ -117,7 +121,7 @@ FTBController.generateHTML = function(quesData) {
   // Add parsedQuestion to the currentQuesData
   quesData.question.text = quesData.question.text.replace(/\[\[.*?\]\]/g, function(a, b) { // eslint-disable-line no-unused-vars
     index = index + 1;
-    template = _.template(FTBController.answerTemplate); // eslint-disable-line no-undef
+    template = _.template(FTBController.answerTemplate()); // eslint-disable-line no-undef
     var ansFieldConfig = {
       "index": index,
       "keyboardType": quesData.question.keyboardConfig.keyboardType
@@ -146,10 +150,19 @@ window.addEventListener('native.keyboardhide', function() {
   $(FTBController.constant.qsFtbContainer).removeClass("align-question");
 });
 
+/**
+   * logs telemetry 
+   * @memberof org.ekstep.questionunit.ftb.ftbcontroller
+   * @param {Object} event js event object
+   */
 FTBController.logTelemetryInteract = function(event) {
   QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.TOUCH, { type: QSTelemetryLogger.EVENT_TYPES.TOUCH, id: event.target.id }); // eslint-disable-line no-undef
 };
 
+/**
+   * pop up of image will be closed
+   * @memberof org.ekstep.questionunit.ftb.ftbcontroller
+   */
 FTBController.hideImageModel = function () {
   $("#image-model-popup").remove();
 };

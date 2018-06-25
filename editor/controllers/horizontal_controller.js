@@ -1,10 +1,10 @@
 /**
- * Plugin to create MCQ question
- * @class org.ekstep.questionunitmcq:mcqQuestionFormController
+ * Plugin to create FTB question
+ * @class org.ekstep.questionunitftb:ftbQuestionFormController
  * Jagadish P<jagadish.pujari@tarento.com>
  */
 
-angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', '$rootScope', function($scope, $rootScope) { // eslint-disable-line no-unused-vars
+angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormController', ['$scope', '$rootScope', 'questionServices', function($scope, $rootScope, $questionServices) { // eslint-disable-line no-unused-vars
   $scope.keyboardConfig = {
     keyboardType: 'Device',
     customKeys: []
@@ -18,6 +18,7 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
       'isHint': false
     }
   };
+  $scope.questionMedia = {};
   $scope.keyboardTypes = ['Device', 'English', 'Custom'];
   $scope.ftbFormData = {
     question: {
@@ -96,6 +97,7 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
     }
     return matches;
   }
+  
   $scope.formValidation = function() {
     $scope.submitted = true;
     var formValid = $scope.ftbForm.$valid && /\[\[.*?\]\]/g.test($scope.ftbFormData.question.text);
@@ -106,68 +108,73 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
       return false;
     }
   }
+
   $scope.generateTelemetry = function(data, event) { // eslint-disable-line no-unused-vars
-    if (data) ecEditor.getService('telemetry').interact({
-      "type": data.type,
-      "id": data.id,
-      "pageid": 'question-creation-ftb-form',
-      "target": {
-        "id": data.target.id,
-        "ver": data.target.ver,
-        "type": data.target.type
-      },
-      "plugin": {
-        "id": "org.ekstep.questionunit.ftb",
-        "ver": "1.0"
-      }
-    })
+    var plugin = {
+      "id": "org.ekstep.questionunit.ftb",
+      "ver": "1.0"
+    }
+    data.form = 'question-creation-mcq-form';
+    $questionServices.generateTelemetry(data, plugin);
   }
 
+  $scope.addImage = function () {
+    var mediaObject =  {
+      type: 'image',
+      search_filter: {} // All composite keys except mediaType
+    }
+    //Defining the callback function of mediaObject before invoking asset browser
+    mediaObject.callback = function(data) {
+      var tempImage = {
+        "id": Math.floor(Math.random() * 1000000000), // Unique identifier
+        "src": org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src), // Media URL
+        "assetId": data.assetMedia.id, // Asset identifier
+        "type": "image", // Type of asset (image, audio, etc)
+        "preload": false // true or false
+      };
+      $scope.ftbFormData.question.image = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
+      $scope.questionMedia.image = tempImage;
+    }
+    $questionServices.invokeAssetBrowser(mediaObject);
+    var telemetryObject = {type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-add-image', ver: '', type: 'button'}}
+    $scope.generateTelemetry(telemetryObject)
+  }
 
-      $scope.addImage = function () {
-      ecEditor.dispatchEvent('org.ekstep.assetbrowser:show', {
-        type: 'image',
-        search_filter: {}, // All composite keys except mediaType
-        callback: function (data) {
-          var tempImage = {
-            "id": Math.floor(Math.random() * 1000000000), // Unique identifier
-            "src": org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src), // Media URL
-            "assetId": data.assetMedia.id, // Asset identifier
-            "type": "image", // Type of asset (image, audio, etc)
-            "preload": false // true or false
-          };
-          $scope.ftbFormData.question.image = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
-        }
-      });
+  $scope.addAudio = function () {
+    var mediaObject =  {
+      type: 'audio',
+      search_filter: {} // All composite keys except mediaType
     }
+    //Defining the callback function of mediaObject before invoking asset browser
+    mediaObject.callback = function(data) {
+      var tempAudio = {
+        "id": Math.floor(Math.random() * 1000000000), // Unique identifier
+        "src": org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src), // Media URL
+        "assetId": data.assetMedia.id, // Asset identifier
+        "type": "audio", // Type of asset (image, audio, etc)
+        "preload": false // true or false
+      };
+      $scope.ftbFormData.question.audio = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
+      $scope.questionMedia.audio = tempAudio;        
+    }
+    $questionServices.invokeAssetBrowser(mediaObject);
+    var telemetryObject = {type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-add-audio', ver: '', type: 'button'}}
+    $scope.generateTelemetry(telemetryObject)
+  }
 
-    $scope.addAudio = function () {
-      ecEditor.dispatchEvent('org.ekstep.assetbrowser:show', {
-        type: 'audio',
-        search_filter: {}, // All composite keys except mediaType
-        callback: function (data) {
-          var tempAudio = {
-            "id": Math.floor(Math.random() * 1000000000), // Unique identifier
-            "src": org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src), // Media URL
-            "assetId": data.assetMedia.id, // Asset identifier
-            "type": "audio", // Type of asset (image, audio, etc)
-            "preload": false // true or false
-          };
-          
-          $scope.ftbFormData.question.audio = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
-        }
-      });
-    }
-
-    $scope.deleteImage = function () {
-        $scope.mcqFormData.question.image = '';
-        delete $scope.questionMedia.image;
-    }
-    $scope.deleteAudio = function () {
-        $scope.isPlayingQ = false;
-        $scope.ftbFormData.question.audio = '';
-        delete $scope.questionMedia.audio;
-    }
+  $scope.deleteImage = function () {
+    $scope.ftbFormData.question.image = '';
+    delete $scope.questionMedia.image;
+    var telemetryObject = {type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-delete-image', ver: '', type: 'button'}}
+    $scope.generateTelemetry(telemetryObject)
+  }
+  $scope.deleteAudio = function () {
+    $scope.isPlayingQ = false;
+    $scope.ftbFormData.question.audio = '';
+    delete $scope.questionMedia.audio;
+    var telemetryObject = {type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-delete-audio', ver: '', type: 'button'}}
+    $scope.generateTelemetry(telemetryObject)
+  }
 
 }]);
 //# sourceURL=horizontalFTB.js
