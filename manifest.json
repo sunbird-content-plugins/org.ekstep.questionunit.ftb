@@ -36,8 +36,8 @@
       "disc": "A type of question or phrase with one or more words replaced with a blank line, giving the reader the chance to add the missing word(s).",
       "category": "FTB",
       "editor": {
-        "templateURL": "editor/templates/horizontal_template.html",
-        "controllerURL": "editor/controllers/horizontal_controller.js",
+        "templateURL": "editor/templates/ftb-template.html",
+        "controllerURL": "editor/controllers/ftb-controller.js",
         "template": "ftbtemplate",
         "controller": "QuestionFormController"
       },
