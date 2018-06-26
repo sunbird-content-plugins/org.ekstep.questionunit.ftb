@@ -155,13 +155,13 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
   $scope.generateTelemetry = function(data, event) { // eslint-disable-line no-unused-vars
     if (data) {
       ecEditor.getService('telemetry').interact({
-        "type": data.type || "TOUCH",
-        "id": data.id || "input",
+        "type": data.type,
+        "id": data.id,
         "pageid": 'question-creation-ftb-form',
         "target": {
-          "id": data.target.id || "",
-          "ver": data.target.ver || "",
-          "type": data.target.type || ""
+          "id": data.target.id,
+          "ver": data.target.ver,
+          "type": data.target.type
         },
         "plugin": {
           "id": $scope.ftbPluginInstance.id,
