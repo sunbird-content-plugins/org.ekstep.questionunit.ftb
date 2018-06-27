@@ -139,6 +139,10 @@ describe("FTB Editor template controller", function() {
             "type": "input"
           }
         };
+        $scope.ftbPluginInstance={
+          id:"ftb",
+          ver:1.0
+        }
         $scope.generateTelemetry(data);
         expect(ecEditor.getService).toHaveBeenCalledWith('telemetry');
       })

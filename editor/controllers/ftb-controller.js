@@ -4,11 +4,7 @@
  * Jagadish P<jagadish.pujari@tarento.com>
  */
 angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', '$rootScope', function($scope, $rootScope) { // eslint-disable-line no-unused-vars
-  var addAllMedia, questionInput;
-  //get ftb plugin manifest
-  $scope.ftbPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.questionunit.ftb");
-  //get keyboard plugin manifest
-  $scope.keyboardPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.keyboard");
+  var questionInput;
   $scope.keyboardConfig = {
     keyboardType: 'Device',
     customKeys: []
@@ -33,30 +29,6 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
     answer: [],
     media: []
   };
-  //add media in question object media array
-  addAllMedia = [{
-    id: "org.ekstep.keyboard.eras_icon",
-    src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/eras_icon.png'),
-    assetId: "org.ekstep.keyboard.eras_icon",
-    type: "image",
-    preload: true
-  }, {
-    id: "org.ekstep.keyboard.language_icon",
-    src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/language_icon.png'),
-    assetId: "org.ekstep.keyboard.language_icon",
-    type: "image",
-    preload: true
-  }, {
-    id: "org.ekstep.keyboard.hide_keyboard",
-    src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/keyboard.svg'),
-    assetId: "org.ekstep.keyboard.hide_keyboard",
-    type: "image",
-    preload: true
-  }];
-  //push media into ftbform media
-  addAllMedia.forEach(function(obj) {
-    $scope.ftbFormData.media.push(obj);
-  })
   questionInput = CKEDITOR.replace('ftbQuestion', { // eslint-disable-line no-undef
     customConfig: CKEDITOR.basePath + "config.js", // eslint-disable-line no-undef
     skin: 'moono-lisa,' + CKEDITOR.basePath + "skins/moono-lisa/", // eslint-disable-line no-undef
@@ -78,21 +50,54 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
   });
   $scope.init = function() {
     /**
-   * editor:questionunit.ftb:call form validation.
-   * @event org.ekstep.questionunit.ftb:validateform
-   * @memberof org.ekstep.questionunit.ftb.horizontal_controller
-   */
+     * editor:questionunit.ftb:call form validation.
+     * @event org.ekstep.questionunit.ftb:validateform
+     * @memberof org.ekstep.questionunit.ftb.horizontal_controller
+     */
+    $scope.ftbPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.questionunit.ftb");
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:validateform', function(event, callback) {
       var validationRes = $scope.formValidation();
       callback(validationRes.isValid, validationRes.formData);
     }, $scope);
     /**
-   * editor:questionunit.ftb:call form edit the question.
-   * @event org.ekstep.questionunit.ftb:editquestion
-   * @memberof org.ekstep.questionunit.ftb.horizontal_controller
-   */
+     * editor:questionunit.ftb:call form edit the question.
+     * @event org.ekstep.questionunit.ftb:editquestion
+     * @memberof org.ekstep.questionunit.ftb.horizontal_controller
+     */
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:editquestion', $scope.editFtbQuestion, $scope);
     ecEditor.dispatchEvent("org.ekstep.questionunit:compiled");
+    $scope.addAllMedia();
+  }
+  /**
+   * add media to stage
+   * @memberof org.ekstep.questionunit.ftb.horizontal_controller
+   */
+  $scope.addAllMedia = function() {
+    var addAllMedia;
+    $scope.keyboardPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.keyboard");
+    addAllMedia = [{
+      id: "org.ekstep.keyboard.eras_icon",
+      src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/eras_icon.png'),
+      assetId: "org.ekstep.keyboard.eras_icon",
+      type: "image",
+      preload: true
+    }, {
+      id: "org.ekstep.keyboard.language_icon",
+      src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/language_icon.png'),
+      assetId: "org.ekstep.keyboard.language_icon",
+      type: "image",
+      preload: true
+    }, {
+      id: "org.ekstep.keyboard.hide_keyboard",
+      src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/keyboard.svg'),
+      assetId: "org.ekstep.keyboard.hide_keyboard",
+      type: "image",
+      preload: true
+    }];
+    //push media into ftbform media
+    addAllMedia.forEach(function(obj) {
+      $scope.ftbFormData.media.push(obj);
+    })
   }
   /**
    * for edit flow
@@ -106,7 +111,7 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
     $scope.keyboardConfig = qdata.question.keyboardConfig;
     $scope.$safeApply();
   }
-   /**
+  /**
    * create answer array for ftb blank
    * @memberof org.ekstep.questionunit.ftb.horizontal_controller
    */
@@ -116,7 +121,7 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
       return a.toLowerCase().trim();
     });
   }
-   /**
+  /**
    * split answer into question text
    * @memberof org.ekstep.questionunit.ftb.horizontal_controller
    * @returns {String} question data.
