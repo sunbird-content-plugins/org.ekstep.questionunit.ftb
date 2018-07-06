@@ -9,8 +9,7 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
     keyboardType: 'Device',
     customKeys: []
   };
-  $scope.formVaild = false;
-  $scope.ftbConfiguartion = {
+  $scope.configuration = {
     'questionConfig': {
       'isText': true,
       'isImage': false,
@@ -54,6 +53,7 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
      * @event org.ekstep.questionunit.ftb:validateform
      * @memberof org.ekstep.questionunit.ftb.horizontal_controller
      */
+    EventBus.listeners['org.ekstep.questionunit.ftb:validateform'] = [];
     $scope.ftbPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.questionunit.ftb");
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:validateform', function(event, callback) {
       var validationRes = $scope.formValidation();
@@ -64,7 +64,9 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
      * @event org.ekstep.questionunit.ftb:editquestion
      * @memberof org.ekstep.questionunit.ftb.horizontal_controller
      */
+    EventBus.listeners['org.ekstep.questionunit.ftb:editquestion'] = [];
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:editquestion', $scope.editFtbQuestion, $scope);
+    //its indicating the controller is loaded in question unit
     ecEditor.dispatchEvent("org.ekstep.questionunit:compiled");
     $scope.addAllMedia();
   }
