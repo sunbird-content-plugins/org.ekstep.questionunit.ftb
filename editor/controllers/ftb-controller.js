@@ -67,7 +67,7 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
     EventBus.listeners['org.ekstep.questionunit.ftb:editquestion'] = [];
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:editquestion', $scope.editFtbQuestion, $scope);
     //its indicating the controller is loaded in question unit
-    ecEditor.dispatchEvent("org.ekstep.questionunit:compiled");
+    ecEditor.dispatchEvent("org.ekstep.questionunit:ready");
     $scope.addAllMedia();
   }
   /**
