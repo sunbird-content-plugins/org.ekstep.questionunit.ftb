@@ -23,7 +23,7 @@ FTBController.getQuestionTemplate = function(){
             <% } %> \
             <% if ( question.data.question.audio.length > 0 ){ %> \
               <div class="ftb-question-audio">\
-              <img src=<%=FTBController.pluginInstance.getAudioIcon() %> onclick=FTBController.pluginInstance.playAudio("<%= question.data.question.audio %>") > \
+              <img src=<%=FTBController.pluginInstance.getAudioIcon("renderer/assets/audio.png") %> onclick=FTBController.pluginInstance.playAudio({src:"<%= question.data.question.audio %>"}) > \
                 </div>\
               <% } %> \
             <%= question.data.question.text %>\

@@ -26,6 +26,7 @@
 
 .qs-ftb-question p{
   float:right;
+  width:100%;
 }
 
 .qs-ftb-question .ftb-question-image img{
@@ -50,12 +51,14 @@ img.qc-question-fullimage {
   float:left;
   width:9vw;
   height: 9vw;
+  margin-bottom:5vh;
 }
 
 .ftb-question-audio {
   float:right;
   width:9vw;
   height: 9vw;
+  margin-bottom:5vh;
 }
 
 .ftb-question-audio img{
