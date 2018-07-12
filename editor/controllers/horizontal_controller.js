@@ -100,7 +100,8 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
   
   $scope.formValidation = function() {
     $scope.submitted = true;
-    var formValid = $scope.ftbForm.$valid && /\[\[.*?\]\]/g.test($scope.ftbFormData.question.text);
+    var ftbQuestionLength = $scope.ftbFormData.question.text.length;
+    var formValid = (ftbQuestionLength > 0) && /\[\[.*?\]\]/g.test($scope.ftbFormData.question.text);
     if (formValid) {
       return true;
     } else {
