@@ -23,21 +23,23 @@ FTBController.getQuestionTemplate = function(){
             <% } %> \
             <% if ( question.data.question.audio.length > 0 ){ %> \
               <div class="ftb-question-audio">\
-              <img src=<%=FTBController.pluginInstance.getAudioIcon("renderer/assets/audio.png") %> onclick=FTBController.pluginInstance.playAudio({src:"<%= question.data.question.audio %>"}) > \
+              <img src=<%=FTBController.pluginInstance.getAudioIcon("renderer/assets/audio-blue.png") %> onclick=FTBController.pluginInstance.playAudio({src:"<%= question.data.question.audio %>"}) > \
                 </div>\
               <% } %> \
+              <div class="ftb-question-text">\
             <%= question.data.question.text %>\
           </div>\
       </div>\
+    </div>\
     </div>\
   </div>';
 } 
 
 FTBController.answerTemplate = function(){
   return '<% if(ansFieldConfig.keyboardType != "undefined" && (ansFieldConfig.keyboardType == "English" || ansFieldConfig.keyboardType == "Custom")) %> \
-  <input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" readonly style="cursor: pointer;" onclick="FTBController.logTelemetryInteract(event);">\
+  <input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" readonly style="cursor: pointer;" style="cursor: pointer; width:<%= ansFieldConfig.answer.length * 15 %>px; " onclick="FTBController.logTelemetryInteract(event);">\
   <% else %> \
-  <input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" onclick="FTBController.logTelemetryInteract(event);">';
+  <input type="text" class="ans-field" style="cursor: pointer; width:<%= ansFieldConfig.answer.length * 15 %>px; " id="ans-field<%= ansFieldConfig.index %>" onclick="FTBController.logTelemetryInteract(event);">';
 }
 
 
@@ -98,9 +100,9 @@ FTBController.keyboardCallback = function(ans) { // eslint-disable-line no-unuse
     <div class='popup-full-body'> \
     <div class='font-lato assess-popup assess-goodjob-popup'> \
      <img class='qc-question-fullimage' src=<%= src %> /> \
-      <div onclick='FTBController.hideImageModel()' class='qc-popup-close-button'>X</div> \
-      <div  class='qc-popup-close-button'>X</div> \
-    </div></div>";
+        <div onclick='FTBController.hideImageModel()' class='qc-popup-close-button'>&times;</div> \
+      </div>\
+    </div>";
     var template = _.template(modelTemplate);
     var templateData = template({
       src: eventData
@@ -124,6 +126,7 @@ FTBController.generateHTML = function(quesData) {
     template = _.template(FTBController.answerTemplate()); // eslint-disable-line no-undef
     var ansFieldConfig = {
       "index": index,
+      "answer": quesData.answer[index-1],
       "keyboardType": quesData.question.keyboardConfig.keyboardType
     };
     ansTemplate = template({ ansFieldConfig: ansFieldConfig });
