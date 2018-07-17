@@ -11,7 +11,7 @@
 
 .qs-ftb-container {
   margin: auto;
-  text-align: center;
+  margin-top:10vh;
 }
 
 .qs-ftb-content {
@@ -20,50 +20,64 @@
 
 .qs-ftb-question {
   font-size: 16px;
-  text-align: center;
   width: 100%;
 }
 
-.qs-ftb-question p{
-  float:right;
-  width:100%;
-}
-
 .qs-ftb-question .ftb-question-image img{
-  max-width:100%;
-  width:100%;
+  height:100%;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+#image-model-popup .popup-overlay{
+  opacity:0.8;
+}
+#image-model-popup .popup-full-body{
+  width:auto;
+  margin:auto;
 }
 
-img.qc-question-fullimage {
-  width: 83%;
-  height: 100%;
-  float:left;
+#image-model-popup .assess-popup {
+  position: relative;
+  width:fit-content;
+  top:0;
+  left:0; 
+  margin:auto;
 }
 
-.qc-popup-close-button {
+#image-model-popup img.qc-question-fullimage {
+  max-width: 60vw;
+  max-height: 100%;
+}
+
+#image-model-popup .qc-popup-close-button {
   position: absolute;
-  right: -35px;
+  right: -15px;
+  top: -20px;
   color: white;
-  bottom: 87%;
+  font-size:20px;
 }
 
 .ftb-question-image {
   float:left;
-  width:9vw;
-  height: 9vw;
-  margin-bottom:5vh;
+  height:17vw;
+  margin-right:10px;
 }
 
 .ftb-question-audio {
-  float:right;
-  width:9vw;
-  height: 9vw;
-  margin-bottom:5vh;
+  width:5vw;
+  height: 5vw;
+  float:left;
+  margin-right: 10px;
+  line-height: 4;
 }
 
 .ftb-question-audio img{
   max-width: 100%;
   width:100%;
+}
+
+.ftb-question-text {
+  text-align:left;
 }
 
 .align-question {
@@ -79,9 +93,12 @@ input#answer {
 }
 
 input.ans-field {
-  border: 2px solid #ececec;
+  border: 2px solid #f1f1f1;
+  background-color: #f1f1f1;
   display: inline;
   text-align: center;
+  margin:0px 4px;
+  border-radius: 4px;
 }
 
 input.ans-field.highlightInput {

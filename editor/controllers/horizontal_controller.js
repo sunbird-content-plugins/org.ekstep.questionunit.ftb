@@ -25,6 +25,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
       text: '',
       image: '',
       audio: '',
+      audioName: '',
       keyboardConfig: $scope.keyboardConfig
     },
     answer: [],
@@ -100,7 +101,8 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
   
   $scope.formValidation = function() {
     $scope.submitted = true;
-    var formValid = $scope.ftbForm.$valid && /\[\[.*?\]\]/g.test($scope.ftbFormData.question.text);
+    var ftbQuestionLength = $scope.ftbFormData.question.text.length;
+    var formValid = (ftbQuestionLength > 0) && /\[\[.*?\]\]/g.test($scope.ftbFormData.question.text);
     if (formValid) {
       return true;
     } else {
@@ -155,6 +157,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
         "preload": false // true or false
       };
       $scope.ftbFormData.question.audio = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
+      $scope.ftbFormData.question.audioName = data.assetMedia.name;
       $scope.questionMedia.audio = tempAudio;        
     }
     $questionServices.invokeAssetBrowser(mediaObject);
@@ -174,6 +177,14 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     delete $scope.questionMedia.audio;
     var telemetryObject = {type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-delete-audio', ver: '', type: 'button'}}
     $scope.generateTelemetry(telemetryObject)
+  }
+
+  $scope.functionConfig = {
+    deleteImage: $scope.deleteImage,
+    addImage: $scope.addImage,
+    addAudio: $scope.addAudio,
+    deleteAudio: $scope.deleteAudio,
+    qtype: 'ftb'
   }
 
 }]);
