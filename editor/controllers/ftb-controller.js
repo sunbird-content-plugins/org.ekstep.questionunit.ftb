@@ -153,9 +153,11 @@ angular.module('ftbApp', []).controller('ftbQuestionFormController', ['$scope', 
       $scope.createAnswerArray();
       formConfig.isValid = true;
       formConfig.formData = $scope.ftbFormData;
+       $('.questionTextBox').removeClass("ck-error");
     } else {
       formConfig.isValid = false;
       formConfig.formData = $scope.ftbFormData;
+      $('.questionTextBox').addClass("ck-error");
     }
     return formConfig;
   }
