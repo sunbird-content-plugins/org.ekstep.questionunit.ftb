@@ -6,15 +6,18 @@ describe('RendererPlugin', function() {
 
   beforeEach(function() {
     plugin = new org.ekstep.questionunitFTB.RendererPlugin({}, {}, {});
-    qsFTBTemplate = QS_FTBTemplate; // eslint-disable-line no-undef
+    qsFTBTemplate = FTBController; // eslint-disable-line no-undef
     spyOn(plugin, "setQuestionTemplate").and.callThrough();
     spyOn(plugin, "preQuestionShow").and.callThrough();
     spyOn(plugin, "postQuestionShow").and.callThrough();
     spyOn(plugin, "evaluateQuestion").and.callThrough();
     spyOn(qsFTBTemplate, "setStateInput").and.callThrough();
     spyOn(EkstepRendererAPI, "dispatchEvent").and.callThrough();
-    spyOn(QS_FTBTemplate, "generateHTML").and.callThrough(); // eslint-disable-line no-undef
+    spyOn(FTBController, "generateHTML").and.callThrough(); // eslint-disable-line no-undef
     plugin._super = jasmine.createSpy('_super').and.callFake(function() {
+      return {};
+    });
+    plugin.saveQuestionState = jasmine.createSpy('saveQuestionState').and.callFake(function() {
       return {};
     });
     showFTBEvent = {
@@ -86,7 +89,7 @@ describe('RendererPlugin', function() {
     it('should set questionData', function() {
       var expectedQuesData = {
         "question": {
-          "text": "<p>English a  <input type=\"text\" class=\"ans-field\" id=\"ans-field1\" readonly style=\"cursor: pointer;\" onclick=\"QS_FTBTemplate.logTelemetryInteract(event);\"> c  <input type=\"text\" class=\"ans-field\" id=\"ans-field2\" readonly style=\"cursor: pointer;\" onclick=\"QS_FTBTemplate.logTelemetryInteract(event);\"></p>\n",
+          "text": "<p>English a  <input type=\"text\" class=\"ans-field\" id=\"ans-field1\" readonly style=\"cursor: pointer;\" onclick=\"FTBController.logTelemetryInteract(event);\"> c  <input type=\"text\" class=\"ans-field\" id=\"ans-field2\" readonly style=\"cursor: pointer;\" onclick=\"FTBController.logTelemetryInteract(event);\"></p>\n",
           "image": "",
           "audio": "",
           "keyboardConfig": {
@@ -110,7 +113,7 @@ describe('RendererPlugin', function() {
     it('should call generateHTML', function() {
 
       plugin.preQuestionShow(showFTBEvent); // eslint-disable-line no-unused-vars
-      expect(QS_FTBTemplate.generateHTML).toHaveBeenCalledWith(plugin._question.data); // eslint-disable-line no-undef
+      expect(FTBController.generateHTML).toHaveBeenCalledWith(plugin._question.data); // eslint-disable-line no-undef
     });
   });
 
@@ -127,7 +130,7 @@ describe('RendererPlugin', function() {
         "template": "<div id=\"ftb-template\">  <div class=\"qs-ftb-container\">    <div class=\"qs-ftb-content\">        <div class=\"qs-ftb-question\" id=\"qs-ftb-question\">          <%= question.data.question.text %>        </div>    </div>  </div></div>",
         "data": {
           "question": {
-            "text": "<p>English a  <input type=\"text\" class=\"ans-field\" id=\"ans-field1\" readonly style=\"cursor: pointer;\" onclick=\"QS_FTBTemplate.logTelemetryInteract(event);\"> c  <input type=\"text\" class=\"ans-field\" id=\"ans-field2\" readonly style=\"cursor: pointer;\" onclick=\"QS_FTBTemplate.logTelemetryInteract(event);\"></p>\n",
+            "text": "<p>English a  <input type=\"text\" class=\"ans-field\" id=\"ans-field1\" readonly style=\"cursor: pointer;\" onclick=\"FTBController.logTelemetryInteract(event);\"> c  <input type=\"text\" class=\"ans-field\" id=\"ans-field2\" readonly style=\"cursor: pointer;\" onclick=\"FTBController.logTelemetryInteract(event);\"></p>\n",
             "image": "",
             "audio": "",
             "keyboardConfig": {
@@ -192,7 +195,7 @@ describe('RendererPlugin', function() {
       var questionset = document.createElement('div');
       questionset.setAttribute("id", "questionset");
       $(document.body).append(questionset);
-      var template = _.template(QS_FTBTemplate.htmlLayout); // eslint-disable-line no-undef
+      var template = _.template(FTBController.template); // eslint-disable-line no-undef
       plugin._question.data = qsFTBTemplate.generateHTML(plugin._question.data);
       $("#questionset").html(template({ question: plugin._question }));
       $("#ans-field1").val("b");
@@ -206,9 +209,8 @@ describe('RendererPlugin', function() {
           "d"
         ]
       };
-
       plugin.evaluateQuestion(evaluateEvent);
-      expect(EkstepRendererAPI.dispatchEvent).toHaveBeenCalledWith('org.ekstep.questionset:saveQuestionState', resultState);
+      expect(plugin.saveQuestionState).toHaveBeenCalledWith(resultState);
     });
   });
 });
