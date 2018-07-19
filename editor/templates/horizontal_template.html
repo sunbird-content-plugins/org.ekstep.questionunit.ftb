@@ -17,7 +17,7 @@
                                         </div>
                                     </div>
                                     <div class="twelve wide column">
-                                        <image-audio-container functionConfig="functionConfig" formdata="ftbFormData.question" mediatype=''  mediaindex=''></image-audio-container>
+                                        <selected-media-container media-callbacks="callbacks" formdata="ftbFormData.question" media-type=''  media-index=''></selected-media-container>
                                     </div>
                                 </div>
                             </div>
@@ -26,8 +26,8 @@
                                     <div class="one column row segment-column">
                                         <div class="column right floated">
                                             <span class="custom-bottom-label">Add: </span>
-                                            <span class="custom-bottom-segment ui icon" ng-if="ftbFormData.question.image.length <= 0" data-tooltip="Add image" data-inverted="" ng-click="addImage()"><i class="image large icon"></i></span>
-                                            <span class="custom-bottom-segment ui icon" ng-if="ftbFormData.question.audio.length <= 0" data-tooltip="Add audio" data-inverted="" ng-click="addAudio('q')"><i class="music large icon"></i></span>
+                                            <span class="custom-bottom-segment ui icon" ng-if="ftbFormData.question.image.length <= 0" data-tooltip="Add image" data-inverted="" ng-click="addMedia('q', '', 'image')"><i class="image large icon"></i></span>
+                                            <span class="custom-bottom-segment ui icon" ng-if="ftbFormData.question.audio.length <= 0" data-tooltip="Add audio" data-inverted="" ng-click="addMedia('q', '', 'audio')"><i class="music large icon"></i></span>
                                         </div>
                                     </div>
                                 </div>

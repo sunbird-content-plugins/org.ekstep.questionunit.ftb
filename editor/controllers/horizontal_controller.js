@@ -4,7 +4,7 @@
  * Jagadish P<jagadish.pujari@tarento.com>
  */
 
-angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormController', ['$scope', '$rootScope', 'questionServices', function($scope, $rootScope, $questionServices) { // eslint-disable-line no-unused-vars
+angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormController', ['$scope', '$rootScope', 'questionServices', function($scope, $rootScope, questionServices) { // eslint-disable-line no-unused-vars
   $scope.keyboardConfig = {
     keyboardType: 'Device',
     customKeys: []
@@ -117,73 +117,43 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
       "ver": "1.0"
     }
     data.form = 'question-creation-mcq-form';
-    $questionServices.generateTelemetry(data, plugin);
+    questionServices.generateTelemetry(data, plugin);
   }
 
-  $scope.addImage = function () {
-    var mediaObject =  {
-      type: 'image',
+  $scope.addMedia = function (type, index, mediaType) {
+    var mediaObject = {
+      type: mediaType,
       search_filter: {} // All composite keys except mediaType
     }
     //Defining the callback function of mediaObject before invoking asset browser
-    mediaObject.callback = function(data) {
-      var tempImage = {
+    mediaObject.callback = function (data) {
+      var telemetryObject = { type: 'TOUCH', id: 'button', target: { id: 'questionunit-ftb-add-' + mediaType, ver: '', type: 'button' } };
+      var media = {
         "id": Math.floor(Math.random() * 1000000000), // Unique identifier
         "src": org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src), // Media URL
         "assetId": data.assetMedia.id, // Asset identifier
-        "type": "image", // Type of asset (image, audio, etc)
+        "type": data.assetMedia.type, // Type of asset (image, audio, etc)
         "preload": false // true or false
       };
-      $scope.ftbFormData.question.image = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
-      $scope.questionMedia.image = tempImage;
+
+      $scope.ftbFormData.question[mediaType] = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
+      data.assetMedia.type == 'audio'  ? $scope.ftbFormData.question.audioName = data.assetMedia.name : '';
+      $scope.questionMedia[mediaType] = media;
+      $scope.generateTelemetry(telemetryObject)
     }
-    $questionServices.invokeAssetBrowser(mediaObject);
-    var telemetryObject = {type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-add-image', ver: '', type: 'button'}}
-    $scope.generateTelemetry(telemetryObject)
+    questionServices.invokeAssetBrowser(mediaObject);
   }
 
-  $scope.addAudio = function () {
-    var mediaObject =  {
-      type: 'audio',
-      search_filter: {} // All composite keys except mediaType
-    }
-    //Defining the callback function of mediaObject before invoking asset browser
-    mediaObject.callback = function(data) {
-      var tempAudio = {
-        "id": Math.floor(Math.random() * 1000000000), // Unique identifier
-        "src": org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src), // Media URL
-        "assetId": data.assetMedia.id, // Asset identifier
-        "type": "audio", // Type of asset (image, audio, etc)
-        "preload": false // true or false
-      };
-      $scope.ftbFormData.question.audio = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
-      $scope.ftbFormData.question.audioName = data.assetMedia.name;
-      $scope.questionMedia.audio = tempAudio;        
-    }
-    $questionServices.invokeAssetBrowser(mediaObject);
-    var telemetryObject = {type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-add-audio', ver: '', type: 'button'}}
-    $scope.generateTelemetry(telemetryObject)
-  }
-
-  $scope.deleteImage = function () {
-    $scope.ftbFormData.question.image = '';
+  $scope.deleteMedia = function (type, index, mediaType) {
+    var telemetryObject = { type: 'TOUCH', id: 'button', target: { id: 'questionunit-ftb-delete-' + mediaType, ver: '', type: 'button' } };
+    $scope.ftbFormData.question[mediaType] = '';
     delete $scope.questionMedia.image;
-    var telemetryObject = {type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-delete-image', ver: '', type: 'button'}}
-    $scope.generateTelemetry(telemetryObject)
-  }
-  $scope.deleteAudio = function () {
-    $scope.isPlayingQ = false;
-    $scope.ftbFormData.question.audio = '';
-    delete $scope.questionMedia.audio;
-    var telemetryObject = {type: 'TOUCH', id: 'button', target: {id: 'questionunit-ftb-delete-audio', ver: '', type: 'button'}}
     $scope.generateTelemetry(telemetryObject)
   }
 
-  $scope.functionConfig = {
-    deleteImage: $scope.deleteImage,
-    addImage: $scope.addImage,
-    addAudio: $scope.addAudio,
-    deleteAudio: $scope.deleteAudio,
+  $scope.callbacks = {
+    deleteMedia: $scope.deleteMedia,
+    addMedia: $scope.addMedia,
     qtype: 'ftb'
   }
 
