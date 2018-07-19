@@ -67,6 +67,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     $scope.generateTelemetry({ type: 'TOUCH', id: 'input', target: { id: 'questionunit-ftb-question', ver: '', type: 'input' } })
   });
   $scope.init = function() {
+    $scope.ftbPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.questionunit.ftb")
     $('.menu .item').tab();
     $('.ui.dropdown').dropdown({
       useLabels: false
@@ -111,15 +112,20 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     }
   }
 
-  $scope.generateTelemetry = function(data, event) { // eslint-disable-line no-unused-vars
-    var plugin = {
-      "id": "org.ekstep.questionunit.ftb",
-      "ver": "1.0"
+  $scope.generateTelemetry = function (data) {
+    data.plugin = data.plugin || {
+      "id": $scope.ftbPluginInstance.id,
+      "ver": $scope.ftbPluginInstance.ver
     }
-    data.form = 'question-creation-mcq-form';
-    questionServices.generateTelemetry(data, plugin);
+    data.form = data.form || 'question-creation-ftb-form';
+    questionServices.generateTelemetry(data);
   }
-
+  /**
+   * invokes the asset browser to pick an image to add to either the question or the options
+   * @param {string} id if `q` then it is image for question, else for options
+   * @param {string} type if `id` is not `q` but an index, then it can be either 'LHS' or 'RHS'
+   * @param {string} mediaType `image` or `audio`
+   */
   $scope.addMedia = function (type, index, mediaType) {
     var mediaObject = {
       type: mediaType,
