@@ -1,5 +1,5 @@
-describe('QS_FTBTemplate', function() {
-  var qsFTBTemplate = QS_FTBTemplate; // eslint-disable-line no-undef
+describe('FTBController', function() {
+  var qsFTBTemplate = FTBController; // eslint-disable-line no-undef
   beforeEach(function() {
     spyOn(qsFTBTemplate, "invokeKeyboard").and.callThrough();
     spyOn(qsFTBTemplate, "generateHTML").and.callThrough();
@@ -41,7 +41,7 @@ describe('QS_FTBTemplate', function() {
       };
       expectedQuesData = {
         "question": {
-          "text": "<p>English a  <input type=\"text\" class=\"ans-field\" id=\"ans-field1\" readonly style=\"cursor: pointer;\" onclick=\"QS_FTBTemplate.logTelemetryInteract(event);\"> c  <input type=\"text\" class=\"ans-field\" id=\"ans-field2\" readonly style=\"cursor: pointer;\" onclick=\"QS_FTBTemplate.logTelemetryInteract(event);\"></p>\n",
+          "text": "<p>English a  <input type=\"text\" class=\"ans-field\" id=\"ans-field1\" readonly style=\"cursor: pointer;\" onclick=\"FTBController.logTelemetryInteract(event);\"> c  <input type=\"text\" class=\"ans-field\" id=\"ans-field2\" readonly style=\"cursor: pointer;\" onclick=\"FTBController.logTelemetryInteract(event);\"></p>\n",
           "image": "",
           "audio": "",
           "keyboardConfig": {
@@ -69,7 +69,7 @@ describe('QS_FTBTemplate', function() {
 
     xit("should call keyboardCallback and remove alignment", function() {
       qsFTBTemplate.keyboardCallback("B");
-      expect($(QS_FTBTemplate.constant.qsFtbContainer).removeClass).toHaveBeenCalledWith("align-question"); // eslint-disable-line no-undef
+      expect($(FTBController.constant.qsFtbContainer).removeClass).toHaveBeenCalledWith("align-question"); // eslint-disable-line no-undef
     });
     // TODO: Has to be fixed
 
@@ -110,7 +110,7 @@ describe('QS_FTBTemplate', function() {
       };
       expectedQuesData = {
         "question": {
-          "text": "<p>Device a  <input type=\"text\" class=\"ans-field\" id=\"ans-field1\" onclick=\"QS_FTBTemplate.logTelemetryInteract(event);\"> c  <input type=\"text\" class=\"ans-field\" id=\"ans-field2\" onclick=\"QS_FTBTemplate.logTelemetryInteract(event);\"></p>\n",
+          "text": "<p>Device a  <input type=\"text\" class=\"ans-field\" id=\"ans-field1\" onclick=\"FTBController.logTelemetryInteract(event);\"> c  <input type=\"text\" class=\"ans-field\" id=\"ans-field2\" onclick=\"FTBController.logTelemetryInteract(event);\"></p>\n",
           "image": "",
           "audio": "",
           "keyboardConfig": {
@@ -160,7 +160,7 @@ describe('QS_FTBTemplate', function() {
       };
       expectedQuesData = {
         "question": {
-          "text": "<p>Custom a  <input type=\"text\" class=\"ans-field\" id=\"ans-field1\" readonly style=\"cursor: pointer;\" onclick=\"QS_FTBTemplate.logTelemetryInteract(event);\"> c  <input type=\"text\" class=\"ans-field\" id=\"ans-field2\" readonly style=\"cursor: pointer;\" onclick=\"QS_FTBTemplate.logTelemetryInteract(event);\"></p>\n",
+          "text": "<p>Custom a  <input type=\"text\" class=\"ans-field\" id=\"ans-field1\" readonly style=\"cursor: pointer;\" onclick=\"FTBController.logTelemetryInteract(event);\"> c  <input type=\"text\" class=\"ans-field\" id=\"ans-field2\" readonly style=\"cursor: pointer;\" onclick=\"FTBController.logTelemetryInteract(event);\"></p>\n",
           "image": "",
           "audio": "",
           "keyboardConfig": {
