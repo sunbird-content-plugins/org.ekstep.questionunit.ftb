@@ -15,8 +15,8 @@ org.ekstep.questionunitFTB.EditorPlugin = org.ekstep.contenteditor.questionUnitP
   initialize: function() {
     var instance = this;
     ecEditor.addEventListener("org.ekstep.plugins.ftbplugin:showpopup", this.loadHtml, this);
-    var templatePath = ecEditor.resolvePluginResource(instance.manifest.id, instance.manifest.ver, 'editor/templates/horizontal_template.html');
-    var controllerPath = ecEditor.resolvePluginResource(instance.manifest.id, instance.manifest.ver, 'editor/controllers/horizontal_controller.js');
+    var templatePath = ecEditor.resolvePluginResource(instance.manifest.id, instance.manifest.ver, 'editor/templates/ftb-template.html');
+    var controllerPath = ecEditor.resolvePluginResource(instance.manifest.id, instance.manifest.ver, 'editor/controllers/ftb-controller.js');
     ecEditor.getService(ServiceConstants.POPUP_SERVICE).loadNgModules(templatePath, controllerPath);
 
   }

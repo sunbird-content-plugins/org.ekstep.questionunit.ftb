@@ -11,7 +11,7 @@
                             <div class="ui segment">
                                 <div class="ui grid">
                                     <div class="twelve wide column">
-                                        <div class="form-group segment textBoxDiv">
+                                        <div class="form-group segment textBoxDiv questionTextBox">
                                             <textarea class="form-control textboxQ-ftb" ng-class="{'has-success':ftbForm.ftbQuestion.$valid, 'has-error': submitted && (ftbForm.ftbQuestion.$error.required != true || ftbForm.ftbQuestion.$error.pattern !=true)}" placeholder="Enter the question" name="ftbQuestion" id="ftbQuestion" ng-model="ftbFormData.question.text" maxlength="220" ng-init="$ctrl.focused = false" ng-focus="$ctrl.focused = true;" ng-blur="$ctrl.focused = false" required>
                                             </textarea>
                                         </div>
@@ -21,7 +21,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="ui secondary right aligned segment custom-sec-segment" ng-if="ftbConfiguartion.questionConfig.isImage || ftbConfiguartion.questionConfig.isAudio">
+                            <div class="ui secondary right aligned segment custom-sec-segment" ng-if="configuration.questionConfig.isImage || configuration.questionConfig.isAudio">
                                 <div class="ui grid">
                                     <div class="one column row segment-column">
                                         <div class="column right floated">
@@ -34,12 +34,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="instructions">
-                        <p>
-                            * Use square brackets [[ ]] to indicate blanks in the sentence. The words between [[ ]] will appear as blanks to student.</p>
-                        <p>
-                            * Example: 'The tree is [[tall]] and [[strong]].' The question will be created as: 'The tree is _______ and _______.' The correct answers will be 'tall' and 'strong'.
-                        </p>
+                    <div class="ui segment instructions">
+                        <ul>
+                            <li>Use square brackets [[ ]] to indicate blanks in the sentence. The words between [[ ]] will appear
+                                as blanks to student.
+                            </li>
+                            <li>Example: 'The tree is [[tall]] and [[strong]].' The question will be created as: 'The tree is
+                                _______ and _______.' The correct answers will be 'tall' and 'strong'.
+                            </li>
+                        </ul>
                     </div>
                 </form>
                 <keyboard-config data="keyboardConfig"></keyboard-config>
