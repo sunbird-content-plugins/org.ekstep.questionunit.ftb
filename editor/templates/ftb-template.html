@@ -26,8 +26,8 @@
                                     <div class="one column row segment-column">
                                         <div class="column right floated">
                                             <span class="custom-bottom-label">Add: </span>
-                                            <span class="custom-bottom-segment ui icon" ng-if="ftbFormData.question.image.length <= 0" data-tooltip="Add image" data-inverted="" ng-click="addMedia('q', '', 'image')"><i class="image large icon"></i></span>
-                                            <span class="custom-bottom-segment ui icon" ng-if="ftbFormData.question.audio.length <= 0" data-tooltip="Add audio" data-inverted="" ng-click="addMedia('q', '', 'audio')"><i class="music large icon"></i></span>
+                                            <span class="custom-bottom-segment ui icon" data-tooltip="{{!ftbFormData.question.image ? 'Add Image' : 'Edit Image' }}" data-inverted="" ng-click="addMedia('q', '', 'image')"><i class="image large icon"></i></span>
+                                            <span class="custom-bottom-segment ui icon" data-tooltip="{{!ftbFormData.question.audio ? 'Add Audio' : 'Edit Audio' }}" data-tooltip="Add audio" data-inverted="" ng-click="addMedia('q', '', 'audio')"><i class="music large icon"></i></span>
                                         </div>
                                     </div>
                                 </div>
