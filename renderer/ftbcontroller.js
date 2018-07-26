@@ -1,4 +1,7 @@
 var FTBController = {};
+FTBController.initTemplate = function (pluginInstance) {
+  FTBController.pluginInstance = pluginInstance;
+};
 FTBController.constant = {
   qsFtbElement: "#ftb-template",
   qsFtbContainer: ".qs-ftb-container",
@@ -8,20 +11,36 @@ FTBController.constant = {
 FTBController.textboxtarget = {};
 FTBController.question = undefined;
 
-FTBController.template = '<div id="ftb-template">\
-  <div class="qs-ftb-container">\
-    <div class="qs-ftb-content">\
-        <div class="qs-ftb-question" id="qs-ftb-question">\
-          <%= question.data.question.text %>\
-        </div>\
+FTBController.getQuestionTemplate = function(){
+  return '<div id="ftb-template">\
+    <div class="qs-ftb-container">\
+      <div class="qs-ftb-content">\
+          <div class="qs-ftb-question" id="qs-ftb-question">\
+          <% if ( question.data.question.image.length > 0 ){ %> \
+            <div class="ftb-question-image">\
+              <img onclick="FTBController.showImageModel(event)" src=<%=FTBController.pluginInstance.getAssetUrl( question.data.question.image) %>> \
+            </div>\
+            <% } %> \
+            <% if ( question.data.question.audio.length > 0 ){ %> \
+              <div class="ftb-question-audio">\
+              <img src=<%=FTBController.pluginInstance.getAudioIcon("renderer/assets/audio-blue.png") %> onclick=FTBController.pluginInstance.playAudio({src:"<%= question.data.question.audio %>"}) > \
+                </div>\
+              <% } %> \
+              <div class="ftb-question-text">\
+            <%= question.data.question.text %>\
+          </div>\
+      </div>\
     </div>\
-  </div>\
-</div>';
+    </div>\
+  </div>';
+} 
 
-FTBController.answerTemplate = '<% if(ansFieldConfig.keyboardType != "undefined" && (ansFieldConfig.keyboardType == "English" || ansFieldConfig.keyboardType == "Custom")) %> \
-<input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" readonly style="cursor: pointer;" onclick="FTBController.logTelemetryInteract(event);">\
-<% else %> \
-<input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" onclick="FTBController.logTelemetryInteract(event);">';
+FTBController.answerTemplate = function(){
+  return '<% if(ansFieldConfig.keyboardType != "undefined" && (ansFieldConfig.keyboardType == "English" || ansFieldConfig.keyboardType == "Custom")) %> \
+  <input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" readonly style="cursor: pointer;" style="cursor: pointer; width:<%= ansFieldConfig.answer.length * 15 %>px; " onclick="FTBController.logTelemetryInteract(event);">\
+  <% else %> \
+  <input type="text" class="ans-field" style="cursor: pointer; width:<%= ansFieldConfig.answer.length * 15 %>px; " id="ans-field<%= ansFieldConfig.index %>" onclick="FTBController.logTelemetryInteract(event);">';
+}
 
 
 /**
@@ -71,6 +90,26 @@ FTBController.keyboardCallback = function(ans) { // eslint-disable-line no-unuse
   $(FTBController.constant.qsFtbContainer).removeClass("align-question");
 };
 
+  /**
+   * image will be shown in popup
+   * @memberof org.ekstep.questionunit.ftb.ftbcontroller
+   */
+  FTBController.showImageModel = function () {
+    var eventData = event.target.src;
+    var modelTemplate = "<div class='popup' id='image-model-popup' onclick='FTBController.hideImageModel()'><div class='popup-overlay' onclick='FTBController.hideImageModel()'></div> \
+    <div class='popup-full-body'> \
+    <div class='font-lato assess-popup assess-goodjob-popup'> \
+     <img class='qc-question-fullimage' src=<%= src %> /> \
+        <div onclick='FTBController.hideImageModel()' class='qc-popup-close-button'>&times;</div> \
+      </div>\
+    </div>";
+    var template = _.template(modelTemplate);
+    var templateData = template({
+      src: eventData
+    })
+    $(FTBController.constant.qsFtbElement).append(templateData);
+  },
+
 /**
  * renderer:questionunit.ftb:get currentQuesData.
  * @event renderer:questionunit.ftb:doTextBoxHandle
@@ -84,9 +123,10 @@ FTBController.generateHTML = function(quesData) {
   // Add parsedQuestion to the currentQuesData
   quesData.question.text = quesData.question.text.replace(/\[\[.*?\]\]/g, function(a, b) { // eslint-disable-line no-unused-vars
     index = index + 1;
-    template = _.template(FTBController.answerTemplate); // eslint-disable-line no-undef
+    template = _.template(FTBController.answerTemplate()); // eslint-disable-line no-undef
     var ansFieldConfig = {
       "index": index,
+      "answer": quesData.answer[index-1],
       "keyboardType": quesData.question.keyboardConfig.keyboardType
     };
     ansTemplate = template({ ansFieldConfig: ansFieldConfig });
@@ -113,8 +153,21 @@ window.addEventListener('native.keyboardhide', function() {
   $(FTBController.constant.qsFtbContainer).removeClass("align-question");
 });
 
+/**
+   * logs telemetry 
+   * @memberof org.ekstep.questionunit.ftb.ftbcontroller
+   * @param {Object} event js event object
+   */
 FTBController.logTelemetryInteract = function(event) {
   QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.TOUCH, { type: QSTelemetryLogger.EVENT_TYPES.TOUCH, id: event.target.id }); // eslint-disable-line no-undef
+};
+
+/**
+   * pop up of image will be closed
+   * @memberof org.ekstep.questionunit.ftb.ftbcontroller
+   */
+FTBController.hideImageModel = function () {
+  $("#image-model-popup").remove();
 };
 
 //# sourceURL=FTBController.js

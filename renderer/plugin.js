@@ -15,13 +15,24 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
    * @event renderer:questionunit.ftb:show
    * @memberof org.ekstep.questionunit.ftb
    */
-  setQuestionTemplate: function() {
-    this._question.template = FTBController.template; // eslint-disable-line no-undef
+  setQuestionTemplate: function () {
+    this._question.template = FTBController.getQuestionTemplate(); // eslint-disable-line no-undef
+    FTBController.initTemplate(this);// eslint-disable-line no-undef
   },
+  /**
+   * Listen show event
+   * @memberof org.ekstep.questionunit.ftb
+   * @param {Object} event from question set.
+   */
   preQuestionShow: function(event) {
     this._super(event);
     this._question.data = FTBController.generateHTML(this._question.data); // eslint-disable-line no-undef
   },
+  /**
+   * Listen event after display the question
+   * @memberof org.ekstep.questionunit.ftb
+   * @param {Object} event from question set.
+   */
   postQuestionShow: function(event) { // eslint-disable-line no-unused-vars
     FTBController.question = this._question; // eslint-disable-line no-undef
 
@@ -33,7 +44,11 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
     if (this._question.state && this._question.state.val) {
       FTBController.setStateInput(); // eslint-disable-line no-undef
     }
-  },
+  },  /**
+  * Hides the keyboard
+  * @memberof org.ekstep.questionunit.ftb
+  * @param {Object} event from question set.
+  */
   postHideQuestion: function() {
     EkstepRendererAPI.dispatchEvent("org.ekstep.keyboard:hide");
   },
