@@ -204,6 +204,9 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
       $scope.ftbFormData.question[mediaType] = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
       data.assetMedia.type == 'audio' ? $scope.ftbFormData.question.audioName = data.assetMedia.name : '';
       $scope.questionMedia[mediaType] = media;
+      if(!$scope.$$phase) {
+        $scope.$digest()
+      }
       $scope.generateTelemetry(telemetryObject)
     }
     questionServices.invokeAssetBrowser(mediaObject);
