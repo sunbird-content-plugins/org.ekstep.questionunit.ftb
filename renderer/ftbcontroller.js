@@ -99,7 +99,7 @@ FTBController.keyboardCallback = function (ans) { // eslint-disable-line no-unus
  */
 FTBController.showImageModel = function () {
   var eventData = event.target.src;
-  var modelTemplate = "<div class='popup' id='image-model-popup' onclick='FTBController.hideImageModel()'><div class='popup-overlay' onclick='FTBController.hideImageModel()'></div> \
+  var modelTemplate = "<div class='popup image-model-popup' id='image-model-popup' onclick='FTBController.hideImageModel()'><div class='popup-overlay' onclick='FTBController.hideImageModel()'></div> \
     <div class='popup-full-body'> \
     <div class='font-lato assess-popup assess-goodjob-popup'> \
      <img class='qc-question-fullimage' src=<%= src %> /> \

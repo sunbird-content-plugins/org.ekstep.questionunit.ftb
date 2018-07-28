@@ -110,3 +110,9 @@ input.ans-field.highlightInput {
     margin-top: 20%;
   }
 }
+
+.image-model-popup{
+  position: fixed;
+  left: 0;
+  top: 0;
+}
