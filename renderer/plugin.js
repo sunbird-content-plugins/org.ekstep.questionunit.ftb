@@ -24,7 +24,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
    * @memberof org.ekstep.questionunit.ftb
    * @param {Object} event from question set.
    */
-  preQuestionShow: function(event) {
+  preQuestionShow: function (event) {
     this._super(event);
     this._question.data = FTBController.generateHTML(this._question.data); // eslint-disable-line no-undef
   },
@@ -33,7 +33,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
    * @memberof org.ekstep.questionunit.ftb
    * @param {Object} event from question set.
    */
-  postQuestionShow: function(event) { // eslint-disable-line no-unused-vars
+  postQuestionShow: function (event) { // eslint-disable-line no-unused-vars
     FTBController.question = this._question; // eslint-disable-line no-undef
 
     $(FTBController.constant.qsFtbElement).off('click'); // eslint-disable-line no-undef
@@ -44,12 +44,13 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
     if (this._question.state && this._question.state.val) {
       FTBController.setStateInput(); // eslint-disable-line no-undef
     }
+    FTBController.postQuestionShow();
   },  /**
   * Hides the keyboard
   * @memberof org.ekstep.questionunit.ftb
   * @param {Object} event from question set.
   */
-  postHideQuestion: function() {
+  postHideQuestion: function () {
     EkstepRendererAPI.dispatchEvent("org.ekstep.keyboard:hide");
   },
   /**
@@ -58,7 +59,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
    * @param {Object} event object from questionset
    * @memberof org.ekstep.questionunit.ftb
    */
-  evaluateQuestion: function(event) {
+  evaluateQuestion: function (event) {
     var telemetryAnsArr = [], //array have all answer
       correctAnswer = false,
       answerArray = [],
@@ -66,7 +67,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
     //check for evalution
     //get all text box value inside the class
     var textBoxCollection = $(FTBController.constant.qsFtbQuestion).find("input[type=text]"); // eslint-disable-line no-undef
-    _.each(textBoxCollection, function(element, index) {
+    _.each(textBoxCollection, function (element, index) {
       answerArray.push(element.value.toLowerCase().trim());
       var key = "ans" + index; // eslint-disable-line no-unused-vars
       ansObj = {
@@ -81,7 +82,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
     }
     // Calculate partial score
     var tempCount = 0;
-    _.each(this._question.data.answer, function(ans, index) { // eslint-disable-line no-undef
+    _.each(this._question.data.answer, function (ans, index) { // eslint-disable-line no-undef
       /*istanbul ignore else*/
       if (ans.toLowerCase().trim() == answerArray[index].toLowerCase().trim()) {
         tempCount++;
