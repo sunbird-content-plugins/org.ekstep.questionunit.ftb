@@ -73,7 +73,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
       }
     });
 
-    var partialScore = (tempCount / this._question.data.answer.length) * this._question.config.max_score; // eslint-disable-line no-undef
+    var partialScore = this._question.config.partial_scoring? ((tempCount / this._question.data.answer.length) * this._question.config.max_score):0; // eslint-disable-line no-undef
 
     var result = {
       eval: correctAnswer,
