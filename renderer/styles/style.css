@@ -5,13 +5,12 @@
   line-height: 2em;
   width: 80%;
   margin-top: 2%;
-  display: grid;
+  /* display: grid; */
   height: 90vh;
 }
 
 .qs-ftb-container {
-  margin: auto;
-  text-align: center;
+  margin-top:10vh;
 }
 
 .qs-ftb-content {
@@ -20,8 +19,65 @@
 
 .qs-ftb-question {
   font-size: 16px;
-  text-align: center;
   width: 100%;
+}
+
+.qs-ftb-question .ftb-question-image img{
+  height:100%;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+#image-model-popup .popup-overlay{
+  opacity:0.8;
+}
+#image-model-popup .popup-full-body{
+  width:auto;
+  margin:auto;
+}
+
+#image-model-popup .assess-popup {
+  position: relative;
+  width:fit-content;
+  top:0;
+  left:0; 
+  margin:auto;
+}
+
+#image-model-popup img.qc-question-fullimage {
+  max-width: 60vw;
+  max-height: 100%;
+}
+
+#image-model-popup .qc-popup-close-button {
+  position: absolute;
+  right: -15px;
+  top: -20px;
+  color: white;
+  font-size:20px;
+}
+
+.ftb-question-image {
+  float:left;
+  height:17vw;
+  margin-right:10px;
+}
+
+.ftb-question-audio {
+  width:5vw;
+  height: 5vw;
+  float:left;
+  margin-right: 10px;
+  line-height: 4;
+}
+
+.ftb-question-audio img{
+  max-width: 100%;
+  width:100%;
+}
+
+.ftb-question-text {
+  text-align:left;
+  line-height: 40px;
 }
 
 .align-question {
@@ -37,9 +93,12 @@ input#answer {
 }
 
 input.ans-field {
-  border: 2px solid #ececec;
+  border: 2px solid #f1f1f1;
+  background-color: #f1f1f1;
   display: inline;
   text-align: center;
+  margin:0px 4px;
+  border-radius: 4px;
 }
 
 input.ans-field.highlightInput {
@@ -50,4 +109,10 @@ input.ans-field.highlightInput {
   .qs-ftb-container {
     margin-top: 20%;
   }
+}
+
+.image-model-popup{
+  position: fixed;
+  left: 0;
+  top: 0;
 }
