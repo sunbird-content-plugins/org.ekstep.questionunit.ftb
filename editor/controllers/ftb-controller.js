@@ -36,7 +36,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     contentsCss: CKEDITOR.basePath + "contents.css" // eslint-disable-line no-undef
   });
   questionInput.on('change', function () {
-    $scope.ftbFormData.question.text = this.getData();
+    $scope.ftbFormData.question.text = $("<div/>").html(this.getData()).text();
   });
   questionInput.on('focus', function () {
     $scope.generateTelemetry({
