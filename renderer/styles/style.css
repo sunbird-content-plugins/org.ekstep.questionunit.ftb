@@ -11,6 +11,8 @@
 
 .qs-ftb-container {
   margin-top:10vh;
+  height: 80vh;
+  overflow-y: auto;
 }
 
 .qs-ftb-content {
@@ -78,6 +80,7 @@
 .ftb-question-text {
   text-align:left;
   line-height: 40px;
+  width: 80%;
 }
 
 .align-question {
