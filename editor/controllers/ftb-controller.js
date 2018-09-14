@@ -36,7 +36,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     contentsCss: CKEDITOR.basePath + "contents.css" // eslint-disable-line no-undef
   });
   questionInput.on('change', function () {
-    $scope.ftbFormData.question.text = $("<div/>").html(this.getData()).text();
+    $scope.ftbFormData.question.text = this.getData();
   });
   questionInput.on('focus', function () {
     $scope.generateTelemetry({
@@ -122,8 +122,15 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
   $scope.createAnswerArray = function () {
     var regexForAns = /(?:^|)\[\[(.*?)(?:\]\]|$)/g;
     $scope.ftbFormData.answer = $scope.splitAnswer($scope.ftbFormData.question.text, regexForAns, 1).map(function (a) {
+      a = $scope.extractHTML(a);
       return a.toLowerCase().trim();
     });
+  }
+
+  $scope.extractHTML = function(htmlElement) {
+    var divElement= document.createElement('div');
+    divElement.innerHTML= htmlElement;
+    return divElement.textContent || divElement.innerText;
   }
   /**
    * split answer into question text
