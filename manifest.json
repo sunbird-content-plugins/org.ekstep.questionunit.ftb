@@ -11,7 +11,7 @@
   "targets": [
     {
       "id": "org.ekstep.questionset",
-      "ver": 1.1
+      "ver": 1
     }
   ],
   "editor": {
