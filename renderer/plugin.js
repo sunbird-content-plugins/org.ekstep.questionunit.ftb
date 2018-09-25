@@ -15,14 +15,25 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
    * @event renderer:questionunit.ftb:show
    * @memberof org.ekstep.questionunit.ftb
    */
-  setQuestionTemplate: function() {
-    this._question.template = FTBController.template; // eslint-disable-line no-undef
+  setQuestionTemplate: function () {
+    this._question.template = FTBController.getQuestionTemplate(); // eslint-disable-line no-undef
+    FTBController.initTemplate(this);// eslint-disable-line no-undef
   },
-  preQuestionShow: function(event) {
+  /**
+   * Listen show event
+   * @memberof org.ekstep.questionunit.ftb
+   * @param {Object} event from question set.
+   */
+  preQuestionShow: function (event) {
     this._super(event);
     this._question.data = FTBController.generateHTML(this._question.data); // eslint-disable-line no-undef
   },
-  postQuestionShow: function(event) { // eslint-disable-line no-unused-vars
+  /**
+   * Listen event after display the question
+   * @memberof org.ekstep.questionunit.ftb
+   * @param {Object} event from question set.
+   */
+  postQuestionShow: function (event) { // eslint-disable-line no-unused-vars
     FTBController.question = this._question; // eslint-disable-line no-undef
 
     $(FTBController.constant.qsFtbElement).off('click'); // eslint-disable-line no-undef
@@ -33,8 +44,13 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
     if (this._question.state && this._question.state.val) {
       FTBController.setStateInput(); // eslint-disable-line no-undef
     }
-  },
-  postHideQuestion: function() {
+    FTBController.postQuestionShow();
+  },  /**
+  * Hides the keyboard
+  * @memberof org.ekstep.questionunit.ftb
+  * @param {Object} event from question set.
+  */
+  postHideQuestion: function () {
     EkstepRendererAPI.dispatchEvent("org.ekstep.keyboard:hide");
   },
   /**
@@ -43,7 +59,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
    * @param {Object} event object from questionset
    * @memberof org.ekstep.questionunit.ftb
    */
-  evaluateQuestion: function(event) {
+  evaluateQuestion: function (event) {
     var telemetryAnsArr = [], //array have all answer
       correctAnswer = false,
       answerArray = [],
@@ -51,7 +67,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
     //check for evalution
     //get all text box value inside the class
     var textBoxCollection = $(FTBController.constant.qsFtbQuestion).find("input[type=text]"); // eslint-disable-line no-undef
-    _.each(textBoxCollection, function(element, index) {
+    _.each(textBoxCollection, function (element, index) {
       answerArray.push(element.value.toLowerCase().trim());
       var key = "ans" + index; // eslint-disable-line no-unused-vars
       ansObj = {
@@ -65,24 +81,32 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
       correctAnswer = true;
     }
     // Calculate partial score
-    var tempCount = 0;
-    _.each(this._question.data.answer, function(ans, index) { // eslint-disable-line no-undef
+    var correctAnswersCount = 0;
+    _.each(this._question.data.answer, function (ans, index) { // eslint-disable-line no-undef
       /*istanbul ignore else*/
       if (ans.toLowerCase().trim() == answerArray[index].toLowerCase().trim()) {
-        tempCount++;
+        correctAnswersCount++;
       }
     });
 
-    var partialScore = (tempCount / this._question.data.answer.length) * this._question.config.max_score; // eslint-disable-line no-undef
-
+    var questionScore;
+    if(this._question.config.partial_scoring){
+      questionScore = (correctAnswersCount / this._question.data.answer.length) * this._question.config.max_score;
+    }else{
+      if((correctAnswersCount / this._question.data.answer.length) == 1){
+        questionScore = this._question.config.max_score;
+      }else{
+        questionScore = 0
+      }
+    }
     var result = {
       eval: correctAnswer,
       state: {
         val: answerArray
       },
-      score: partialScore,
+      score: questionScore,
       values: telemetryAnsArr,
-      noOfCorrectAns: tempCount,
+      noOfCorrectAns: correctAnswersCount,
       totalAns: this._question.data.answer.length
     };
 

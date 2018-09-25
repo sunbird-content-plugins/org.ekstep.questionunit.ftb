@@ -1,6 +1,6 @@
 {
   "id": "org.ekstep.questionunit.ftb",
-  "ver": "1.0",
+  "ver": "1.1",
   "author": "Gourav More",
   "title": "FTB question",
   "description": "",
@@ -54,6 +54,12 @@
       {
         "type": "js",
         "src": "renderer/ftbcontroller.js"
+      },
+      {
+        "id":"org.ekstep.questionunit.ftb.audioblue",
+        "type":"image",
+        "src":"/renderer/assets/audio-blue.png",
+        "assetId": "org.ekstep.questionunit.ftb.audioblue"
       }
     ]
   },
