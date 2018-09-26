@@ -105,6 +105,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
         val: answerArray
       },
       score: questionScore,
+      max_score: this._question.config.max_score,
       values: telemetryAnsArr,
       noOfCorrectAns: correctAnswersCount,
       totalAns: this._question.data.answer.length
