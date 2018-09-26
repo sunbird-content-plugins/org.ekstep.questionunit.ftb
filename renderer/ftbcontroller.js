@@ -40,6 +40,7 @@ FTBController.getQuestionTemplate = function () {
 FTBController.answerTemplate = function () {
   return '<% if(ansFieldConfig.keyboardType != "undefined" && (ansFieldConfig.keyboardType == "English" || ansFieldConfig.keyboardType == "Custom")) %> \
     <input type="text" class="ans-field" id="ans-field<%= ansFieldConfig.index %>" readonly style="cursor: pointer;" style="cursor: pointer; width:<%= ansFieldConfig.fieldWidth %>px; " onclick="FTBController.logTelemetryInteract(event);">\
+    <span id="ans-field<%= ansFieldConfig.index %>-temp" style="display:none;"><%= ansFieldConfig.answer %></span>\
   <% else %> \
     <input type="text" class="ans-field" style="cursor: pointer; width:<%= ansFieldConfig.fieldWidth %>px; " id="ans-field<%= ansFieldConfig.index %>" onclick="FTBController.logTelemetryInteract(event);">\
     <span id="ans-field<%= ansFieldConfig.index %>-temp" style="display:none;"><%= ansFieldConfig.answer %></span>';
@@ -98,20 +99,20 @@ FTBController.keyboardCallback = function (ans) { // eslint-disable-line no-unus
  * @memberof org.ekstep.questionunit.ftb.ftbcontroller
  */
 FTBController.showImageModel = function () {
-  var eventData = event.target.src;
-  var modelTemplate = "<div class='popup image-model-popup' id='image-model-popup' onclick='FTBController.hideImageModel()'><div class='popup-overlay' onclick='FTBController.hideImageModel()'></div> \
+    var eventData = event.target.src;
+    var modelTemplate = "<div class='popup image-model-popup' id='image-model-popup' onclick='FTBController.hideImageModel()'><div class='popup-overlay' onclick='FTBController.hideImageModel()'></div> \
     <div class='popup-full-body'> \
     <div class='font-lato assess-popup assess-goodjob-popup'> \
      <img class='qc-question-fullimage' src=<%= src %> /> \
         <div onclick='FTBController.hideImageModel()' class='qc-popup-close-button'>&times;</div> \
       </div>\
     </div>";
-  var template = _.template(modelTemplate);
-  var templateData = template({
-    src: eventData
-  })
-  $(FTBController.constant.qsFtbElement).append(templateData);
-},
+    var template = _.template(modelTemplate);
+    var templateData = template({
+      src: eventData
+    })
+    $(FTBController.constant.qsFtbElement).append(templateData);
+  },
 
   /**
    * renderer:questionunit.ftb:get currentQuesData.
@@ -133,7 +134,9 @@ FTBController.showImageModel = function () {
         "keyboardType": quesData.question.keyboardConfig.keyboardType,
         "fieldWidth": quesData.answer[index - 1].length * 15
       };
-      ansTemplate = template({ ansFieldConfig: ansFieldConfig });
+      ansTemplate = template({
+        ansFieldConfig: ansFieldConfig
+      });
       return ansTemplate;
     });
     return quesData;
@@ -151,7 +154,9 @@ FTBController.postQuestionShow = function () {
     width = width <= FTBController.constant.fieldMinWidth ? FTBController.constant.fieldMinWidth : width;
     if (width > 1.0)
       width = 1.0;
-    $("#" + element.id).css({ "width": (width * 100) + "%" });
+    $("#" + element.id).css({
+      "width": (width * 100) + "%"
+    });
   });
 }
 
@@ -174,18 +179,21 @@ window.addEventListener('native.keyboardhide', function () {
 });
 
 /**
-   * logs telemetry 
-   * @memberof org.ekstep.questionunit.ftb.ftbcontroller
-   * @param {Object} event js event object
-   */
+ * logs telemetry 
+ * @memberof org.ekstep.questionunit.ftb.ftbcontroller
+ * @param {Object} event js event object
+ */
 FTBController.logTelemetryInteract = function (event) {
-  QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.TOUCH, { type: QSTelemetryLogger.EVENT_TYPES.TOUCH, id: event.target.id }); // eslint-disable-line no-undef
+  QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.TOUCH, {
+    type: QSTelemetryLogger.EVENT_TYPES.TOUCH,
+    id: event.target.id
+  }); // eslint-disable-line no-undef
 };
 
 /**
-   * pop up of image will be closed
-   * @memberof org.ekstep.questionunit.ftb.ftbcontroller
-   */
+ * pop up of image will be closed
+ * @memberof org.ekstep.questionunit.ftb.ftbcontroller
+ */
 FTBController.hideImageModel = function () {
   $("#image-model-popup").remove();
 };
