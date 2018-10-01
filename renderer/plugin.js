@@ -81,24 +81,32 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
       correctAnswer = true;
     }
     // Calculate partial score
-    var tempCount = 0;
+    var correctAnswersCount = 0;
     _.each(this._question.data.answer, function (ans, index) { // eslint-disable-line no-undef
       /*istanbul ignore else*/
       if (ans.toLowerCase().trim() == answerArray[index].toLowerCase().trim()) {
-        tempCount++;
+        correctAnswersCount++;
       }
     });
 
-    var partialScore = (tempCount / this._question.data.answer.length) * this._question.config.max_score; // eslint-disable-line no-undef
-
+    var questionScore;
+    if(this._question.config.partial_scoring){
+      questionScore = (correctAnswersCount / this._question.data.answer.length) * this._question.config.max_score;
+    }else{
+      if((correctAnswersCount / this._question.data.answer.length) == 1){
+        questionScore = this._question.config.max_score;
+      }else{
+        questionScore = 0
+      }
+    }
     var result = {
       eval: correctAnswer,
       state: {
         val: answerArray
       },
-      score: partialScore,
+      score: questionScore,
       values: telemetryAnsArr,
-      noOfCorrectAns: tempCount,
+      noOfCorrectAns: correctAnswersCount,
       totalAns: this._question.data.answer.length
     };
 

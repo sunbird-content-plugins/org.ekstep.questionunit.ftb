@@ -54,6 +54,12 @@
       {
         "type": "js",
         "src": "renderer/ftbcontroller.js"
+      },
+      {
+        "id":"org.ekstep.questionunit.ftb.audioblue",
+        "type":"image",
+        "src":"/renderer/assets/audio-blue.png",
+        "assetId": "org.ekstep.questionunit.ftb.audioblue"
       }
     ]
   },

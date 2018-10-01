@@ -20,7 +20,7 @@ FTBController.getQuestionTemplate = function () {
           <div class="qs-ftb-question" id="qs-ftb-question">\
           <% if ( question.data.question.image.length > 0 ){ %> \
             <div class="ftb-question-image">\
-              <img onclick="FTBController.showImageModel(event)" src=<%=FTBController.pluginInstance.getAssetUrl( question.data.question.image) %>> \
+              <img onclick="org.ekstep.questionunit.baseComponent.showImageModel(event, \'<%= FTBController.pluginInstance.getAssetUrl(question.data.question.image) %>\')"  src="<%= FTBController.pluginInstance.getAssetUrl(question.data.question.image) %>" > \
             </div>\
             <% } %> \
             <% if ( question.data.question.audio.length > 0 ){ %> \
