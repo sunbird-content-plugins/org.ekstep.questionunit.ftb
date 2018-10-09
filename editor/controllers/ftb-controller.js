@@ -114,6 +114,9 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     var qdata = data.data;
     $scope.ftbFormData.question = qdata.question;
     $scope.keyboardConfig = qdata.question.keyboardConfig;
+    _.each(qdata.media, function (mediaObject, index) {
+      $scope.questionMedia[mediaObject.type] = mediaObject;
+    });
     $scope.$safeApply();
   }
   /**
@@ -160,8 +163,10 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     ftbFormQuestionText = $scope.ftbFormData.question.text;
     formValid = (ftbFormQuestionText.length > 0) && /\[\[.*?\]\]/g.test(ftbFormQuestionText);
 
+    $scope.ftbFormData.media = [];
     _.isEmpty($scope.ftbFormData.question.image) ? 0 : $scope.ftbFormData.media.push($scope.questionMedia.image);
     _.isEmpty($scope.ftbFormData.question.audio) ? 0 : $scope.ftbFormData.media.push($scope.questionMedia.audio);
+    
     if (formValid) {
       $scope.createAnswerArray();
       formConfig.isValid = true;
