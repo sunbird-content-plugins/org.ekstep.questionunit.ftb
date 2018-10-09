@@ -70,8 +70,6 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:editquestion', $scope.editFtbQuestion, $scope);
     //its indicating the controller is loaded in question unit
     ecEditor.dispatchEvent("org.ekstep.questionunit:ready");
-    $scope.ftbFormData.media = [];
-    $scope.addAllMedia();
   }
   /**
    * add media to stage
@@ -164,6 +162,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     formValid = (ftbFormQuestionText.length > 0) && /\[\[.*?\]\]/g.test(ftbFormQuestionText);
 
     $scope.ftbFormData.media = [];
+    $scope.addAllMedia();
     _.isEmpty($scope.ftbFormData.question.image) ? 0 : $scope.ftbFormData.media.push($scope.questionMedia.image);
     _.isEmpty($scope.ftbFormData.question.audio) ? 0 : $scope.ftbFormData.media.push($scope.questionMedia.audio);
     
