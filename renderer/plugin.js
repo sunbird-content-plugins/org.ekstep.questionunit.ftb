@@ -17,7 +17,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
    */
   setQuestionTemplate: function () {
     this._question.template = FTBController.getQuestionTemplate(); // eslint-disable-line no-undef
-    FTBController.initTemplate(this);// eslint-disable-line no-undef
+    FTBController.initTemplate(this); // eslint-disable-line no-undef
   },
   /**
    * Listen show event
@@ -45,11 +45,12 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
       FTBController.setStateInput(); // eslint-disable-line no-undef
     }
     FTBController.postQuestionShow();
-  },  /**
-  * Hides the keyboard
-  * @memberof org.ekstep.questionunit.ftb
-  * @param {Object} event from question set.
-  */
+  },
+  /**
+   * Hides the keyboard
+   * @memberof org.ekstep.questionunit.ftb
+   * @param {Object} event from question set.
+   */
   postHideQuestion: function () {
     EkstepRendererAPI.dispatchEvent("org.ekstep.keyboard:hide");
   },
@@ -90,12 +91,12 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
     });
 
     var questionScore;
-    if(this._question.config.partial_scoring){
+    if (this._question.config.partial_scoring) {
       questionScore = (correctAnswersCount / this._question.data.answer.length) * this._question.config.max_score;
-    }else{
-      if((correctAnswersCount / this._question.data.answer.length) == 1){
+    } else {
+      if ((correctAnswersCount / this._question.data.answer.length) == 1) {
         questionScore = this._question.config.max_score;
-      }else{
+      } else {
         questionScore = 0
       }
     }
@@ -117,9 +118,10 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
       callback(result);
     }
 
-    this.saveQuestionState(result.state);
-
-    QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.RESPONSE, { "type": "INPUT", "values": telemetryAnsArr }); // eslint-disable-line no-undef
+    QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.RESPONSE, {
+      "type": "INPUT",
+      "values": telemetryAnsArr
+    }); // eslint-disable-line no-undef
     QSTelemetryLogger.logEvent(QSTelemetryLogger.EVENT_TYPES.ASSESSEND, result); // eslint-disable-line no-undef
   }
 });
