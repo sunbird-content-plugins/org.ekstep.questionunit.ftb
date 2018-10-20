@@ -70,7 +70,6 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:editquestion', $scope.editFtbQuestion, $scope);
     //its indicating the controller is loaded in question unit
     ecEditor.dispatchEvent("org.ekstep.questionunit:ready");
-    $scope.addAllMedia();
   }
   /**
    * add media to stage
@@ -113,6 +112,9 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     var qdata = data.data;
     $scope.ftbFormData.question = qdata.question;
     $scope.keyboardConfig = qdata.question.keyboardConfig;
+    _.each(qdata.media, function (mediaObject, index) {
+      $scope.questionMedia[mediaObject.type] = mediaObject;
+    });
     $scope.$safeApply();
   }
   /**
@@ -122,8 +124,15 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
   $scope.createAnswerArray = function () {
     var regexForAns = /(?:^|)\[\[(.*?)(?:\]\]|$)/g;
     $scope.ftbFormData.answer = $scope.splitAnswer($scope.ftbFormData.question.text, regexForAns, 1).map(function (a) {
+      a = $scope.extractHTML(a);
       return a.toLowerCase().trim();
     });
+  }
+
+  $scope.extractHTML = function(htmlElement) {
+    var divElement= document.createElement('div');
+    divElement.innerHTML= htmlElement;
+    return divElement.textContent || divElement.innerText;
   }
   /**
    * split answer into question text
@@ -151,6 +160,12 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     $scope.submitted = true;
     ftbFormQuestionText = $scope.ftbFormData.question.text;
     formValid = (ftbFormQuestionText.length > 0) && /\[\[.*?\]\]/g.test(ftbFormQuestionText);
+
+    $scope.ftbFormData.media = [];
+    $scope.addAllMedia();
+    _.isEmpty($scope.ftbFormData.question.image) ? 0 : $scope.ftbFormData.media.push($scope.questionMedia.image);
+    _.isEmpty($scope.ftbFormData.question.audio) ? 0 : $scope.ftbFormData.media.push($scope.questionMedia.audio);
+    
     if (formValid) {
       $scope.createAnswerArray();
       formConfig.isValid = true;
