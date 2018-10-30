@@ -30,6 +30,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     answer: [],
     media: []
   };
+  $scope.defaultMedia = [];
   questionInput = CKEDITOR.replace('ftbQuestion', { // eslint-disable-line no-undef
     customConfig: ecEditor.resolvePluginResource('org.ekstep.questionunit', '1.0', "editor/ckeditor-config.js"),
     skin: 'moono-lisa,' + CKEDITOR.basePath + "skins/moono-lisa/", // eslint-disable-line no-undef
@@ -70,15 +71,17 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:editquestion', $scope.editFtbQuestion, $scope);
     //its indicating the controller is loaded in question unit
     ecEditor.dispatchEvent("org.ekstep.questionunit:ready");
+    $scope.defaultMedia = [];
+    $scope.addDefaultMedia();
   }
   /**
    * add media to stage
    * @memberof org.ekstep.questionunit.ftb.horizontal_controller
    */
-  $scope.addAllMedia = function () {
-    var addAllMedia;
+  $scope.addDefaultMedia = function () {
+    
     $scope.keyboardPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.keyboard");
-    addAllMedia = [{
+    $scope.defaultMedia = [{
       id: "org.ekstep.keyboard.eras_icon",
       src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/eras_icon.png'),
       assetId: "org.ekstep.keyboard.eras_icon",
@@ -98,7 +101,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
       preload: true
     }];
     //push media into ftbform media
-    addAllMedia.forEach(function (obj) {
+    $scope.defaultMedia.forEach(function (obj) {
       $scope.ftbFormData.media.push(obj);
     })
   }
@@ -161,8 +164,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     ftbFormQuestionText = $scope.ftbFormData.question.text;
     formValid = (ftbFormQuestionText.length > 0) && /\[\[.*?\]\]/g.test(ftbFormQuestionText);
 
-    $scope.ftbFormData.media = [];
-    $scope.addAllMedia();
+    $scope.ftbFormData.media.length = $scope.defaultMedia.length; 
     _.isEmpty($scope.ftbFormData.question.image) ? 0 : $scope.ftbFormData.media.push($scope.questionMedia.image);
     _.isEmpty($scope.ftbFormData.question.audio) ? 0 : $scope.ftbFormData.media.push($scope.questionMedia.audio);
     
