@@ -213,19 +213,16 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     //Defining the callback function of mediaObject before invoking asset browser
     mediaObject.callback = function (data) {
       var telemetryObject = { type: 'TOUCH', id: 'button', target: { id: 'questionunit-ftb-add-' + mediaType, ver: '', type: 'button' } };
-      var mediaObject = {
+      var newMedia = {
         "type" : type,
         "value" : data
-      };
-      if($scope.ftbFormData.question[mediaType]){
-        questionUnitInstance.removeMedia($scope.ftbFormData.question[mediaType]);
-      }
-      questionUnitInstance.setMedia(mediaObject)
-      
-      var media = questionUnitInstance.getMedia();
-      $scope.ftbFormData.question[mediaType] = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(media.src);
-      media.type == 'audio' ? $scope.ftbFormData.question.audioName = media.name : '';
-      $scope.questionMedia[mediaType] = media;
+      }, oldMedia = {};
+      !_.isEmpty($scope.ftbFormData.question[mediaType]) ? oldMedia = $scope.questionMedia[mediaType] : oldMedia = undefined;
+      questionUnitInstance.setMedia(newMedia, oldMedia);
+
+      $scope.ftbFormData.question[mediaType] = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
+      data.assetMedia.type == 'audio' ? $scope.ftbFormData.question.audioName = data.assetMedia.name : '';
+      $scope.questionMedia[mediaType] = data.assetMedia;
       $scope.ftbFormData.media = questionUnitInstance.getAllMedia();
 
       if(!$scope.$$phase) {
@@ -245,7 +242,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
   $scope.deleteMedia = function (type, index, mediaType) {
     var telemetryObject = { type: 'TOUCH', id: 'button', target: { id: 'questionunit-ftb-delete-' + mediaType, ver: '', type: 'button' } };
     
-    questionUnitInstance.removeMedia($scope.questionMedia[mediaType]);
+    questionUnitInstance.removeMedia('id', $scope.questionMedia[mediaType].id);
     $scope.ftbFormData.media = questionUnitInstance.getAllMedia();
     $scope.ftbFormData.question[mediaType] = '';
 
