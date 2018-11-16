@@ -112,9 +112,8 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     var qdata = data.data;
     $scope.ftbFormData.question = qdata.question;
     $scope.keyboardConfig = qdata.question.keyboardConfig;
-    _.each(qdata.media, function (mediaObject, index) {
-      $scope.questionMedia[mediaObject.type] = mediaObject;
-    });
+    !_.isEmpty($scope.ftbFormData.question['image']) ? $scope.questionMedia['image'] = questionUnitInstance.getMedia('src', $scope.ftbFormData.question['image']) : $scope.questionMedia['image'] = {};
+    !_.isEmpty($scope.ftbFormData.question['audio']) ? $scope.questionMedia['audio'] = questionUnitInstance.getMedia('src', $scope.ftbFormData.question['audio']) : $scope.questionMedia['audio'] = {};
     $scope.$safeApply();
   }
   /**
@@ -236,7 +235,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
   $scope.deleteMedia = function (type, index, mediaType) {
     var telemetryObject = { type: 'TOUCH', id: 'button', target: { id: 'questionunit-ftb-delete-' + mediaType, ver: '', type: 'button' } };
     $scope.ftbFormData.question[mediaType] = '';
-    delete $scope.questionMedia.image;
+    delete $scope.questionMedia;
     $scope.generateTelemetry(telemetryObject)
   }
 
