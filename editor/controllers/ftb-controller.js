@@ -31,25 +31,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     media: []
   };
   $scope.keyboardPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.keyboard");
-  $scope.defaultMedia = [{
-    id: "org.ekstep.keyboard.eras_icon",
-    src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/eras_icon.png'),
-    assetId: "org.ekstep.keyboard.eras_icon",
-    type: "image",
-    preload: true
-  }, {
-    id: "org.ekstep.keyboard.language_icon",
-    src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/language_icon.png'),
-    assetId: "org.ekstep.keyboard.language_icon",
-    type: "image",
-    preload: true
-  }, {
-    id: "org.ekstep.keyboard.hide_keyboard",
-    src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/keyboard.svg'),
-    assetId: "org.ekstep.keyboard.hide_keyboard",
-    type: "image",
-    preload: true
-  }];
+  $scope.questionUnitInstance = {};
   questionInput = CKEDITOR.replace('ftbQuestion', { // eslint-disable-line no-undef
     customConfig: ecEditor.resolvePluginResource('org.ekstep.questionunit', '1.0', "editor/ckeditor-config.js"),
     skin: 'moono-lisa,' + CKEDITOR.basePath + "skins/moono-lisa/", // eslint-disable-line no-undef
@@ -69,13 +51,14 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
       }
     })
   });
-  var questionUnitInstance = ecEditor.instantiatePlugin('org.ekstep.questionunit');
+  
   $scope.init = function () {
     /**
      * editor:questionunit.ftb:call form validation.
      * @event org.ekstep.questionunit.ftb:validateform
      * @memberof org.ekstep.questionunit.ftb.horizontal_controller
      */
+    $scope.questionUnitInstance = ecEditor.instantiatePlugin('org.ekstep.questionunit');
     EventBus.listeners['org.ekstep.questionunit.ftb:validateform'] = [];
     $scope.ftbPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.questionunit.ftb");
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:validateform', function (event, callback) {
@@ -100,12 +83,31 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
    */
   $scope.addDefaultMedia = function () {
     //push media into ftbform media
-    _.each($scope.defaultMedia, function (obj) {
+    var defaultMedia = [{
+      id: "org.ekstep.keyboard.eras_icon",
+      src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/eras_icon.png'),
+      assetId: "org.ekstep.keyboard.eras_icon",
+      type: "image",
+      preload: true
+    }, {
+      id: "org.ekstep.keyboard.language_icon",
+      src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/language_icon.png'),
+      assetId: "org.ekstep.keyboard.language_icon",
+      type: "image",
+      preload: true
+    }, {
+      id: "org.ekstep.keyboard.hide_keyboard",
+      src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/keyboard.svg'),
+      assetId: "org.ekstep.keyboard.hide_keyboard",
+      type: "image",
+      preload: true
+    }];
+    _.each(defaultMedia, function (obj) {
       var mediaObject = {
         "type" : "default",
         "value" : obj
       };
-      questionUnitInstance.setMedia(mediaObject);
+      $scope.questionUnitInstance.setMedia(mediaObject);
     })
   }
   /**
@@ -118,9 +120,9 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     var qdata = data.data;
     $scope.ftbFormData.question = qdata.question;
     _.each(qdata.media, function (obj) {
-      questionUnitInstance.setMedia(obj);
+      $scope.questionUnitInstance.setMedia(obj);
     })
-    $scope.ftbFormData.media = questionUnitInstance.getAllMedia();
+    $scope.ftbFormData.media = $scope.questionUnitInstance.getAllMedia();
     $scope.keyboardConfig = qdata.question.keyboardConfig;
     _.each(qdata.media, function (mediaObject, index) {
       $scope.questionMedia[mediaObject.type] = mediaObject;
@@ -218,12 +220,12 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
         "value" : data
       }, oldMedia = {};
       !_.isEmpty($scope.ftbFormData.question[mediaType]) ? oldMedia = $scope.questionMedia[mediaType] : oldMedia = undefined;
-      questionUnitInstance.setMedia(newMedia, oldMedia);
+      $scope.questionUnitInstance.setMedia(newMedia, oldMedia);
 
       $scope.ftbFormData.question[mediaType] = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
       data.assetMedia.type == 'audio' ? $scope.ftbFormData.question.audioName = data.assetMedia.name : '';
       $scope.questionMedia[mediaType] = data.assetMedia;
-      $scope.ftbFormData.media = questionUnitInstance.getAllMedia();
+      $scope.ftbFormData.media = $scope.questionUnitInstance.getAllMedia();
 
       if(!$scope.$$phase) {
         $scope.$digest()
@@ -242,8 +244,8 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
   $scope.deleteMedia = function (type, index, mediaType) {
     var telemetryObject = { type: 'TOUCH', id: 'button', target: { id: 'questionunit-ftb-delete-' + mediaType, ver: '', type: 'button' } };
     
-    questionUnitInstance.removeMedia('id', $scope.questionMedia[mediaType].id);
-    $scope.ftbFormData.media = questionUnitInstance.getAllMedia();
+    $scope.questionUnitInstance.removeMedia('id', $scope.questionMedia[mediaType].id);
+    $scope.ftbFormData.media = $scope.questionUnitInstance.getAllMedia();
     $scope.ftbFormData.question[mediaType] = '';
     $scope.questionMedia = {};
     $scope.generateTelemetry(telemetryObject)
