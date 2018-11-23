@@ -245,7 +245,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     questionUnitInstance.removeMedia('id', $scope.questionMedia[mediaType].id);
     $scope.ftbFormData.media = questionUnitInstance.getAllMedia();
     $scope.ftbFormData.question[mediaType] = '';
-
+    $scope.questionMedia = {};
     $scope.generateTelemetry(telemetryObject)
   }
 
