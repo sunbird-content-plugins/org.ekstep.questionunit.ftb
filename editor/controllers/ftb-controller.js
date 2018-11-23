@@ -235,7 +235,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
   $scope.deleteMedia = function (type, index, mediaType) {
     var telemetryObject = { type: 'TOUCH', id: 'button', target: { id: 'questionunit-ftb-delete-' + mediaType, ver: '', type: 'button' } };
     $scope.ftbFormData.question[mediaType] = '';
-    delete $scope.questionMedia;
+    $scope.questionMedia = {};
     $scope.generateTelemetry(telemetryObject)
   }
 
