@@ -18,6 +18,7 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     }
   };
   $scope.questionMedia = {};
+  $scope.pluginInstance = {};
   $scope.keyboardTypes = ['Device', 'English', 'Custom'];
   $scope.ftbFormData = {
     question: {
@@ -30,8 +31,6 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
     answer: [],
     media: []
   };
-  $scope.keyboardPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.keyboard");
-  $scope.questionUnitInstance = {};
   questionInput = CKEDITOR.replace('ftbQuestion', { // eslint-disable-line no-undef
     customConfig: ecEditor.resolvePluginResource('org.ekstep.questionunit', '1.0', "editor/ckeditor-config.js"),
     skin: 'moono-lisa,' + CKEDITOR.basePath + "skins/moono-lisa/", // eslint-disable-line no-undef
@@ -58,57 +57,25 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
      * @event org.ekstep.questionunit.ftb:validateform
      * @memberof org.ekstep.questionunit.ftb.horizontal_controller
      */
-    $scope.questionUnitInstance = ecEditor.instantiatePlugin('org.ekstep.questionunit');
+
     EventBus.listeners['org.ekstep.questionunit.ftb:validateform'] = [];
     $scope.ftbPluginInstance = org.ekstep.pluginframework.pluginManager.getPluginManifest("org.ekstep.questionunit.ftb");
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:validateform', function (event, callback) {
       var validationRes = $scope.formValidation();
       callback(validationRes.isValid, validationRes.formData);
     }, $scope);
+    $scope.pluginInstance = ecEditor.instantiatePlugin('org.ekstep.questionunit.ftb');
+    $scope.pluginInstance.addDefaultMedia();
     /**
      * editor:questionunit.ftb:call form edit the question.
      * @event org.ekstep.questionunit.ftb:editquestion
      * @memberof org.ekstep.questionunit.ftb.horizontal_controller
      */
-    $scope.addDefaultMedia();
     EventBus.listeners['org.ekstep.questionunit.ftb:editquestion'] = [];
     ecEditor.addEventListener('org.ekstep.questionunit.ftb:editquestion', $scope.editFtbQuestion, $scope);
     //its indicating the controller is loaded in question unit
     ecEditor.dispatchEvent("org.ekstep.questionunit:ready");
     
-  }
-  /**
-   * add media to stage
-   * @memberof org.ekstep.questionunit.ftb.horizontal_controller
-   */
-  $scope.addDefaultMedia = function () {
-    //push media into ftbform media
-    var defaultMedia = [{
-      id: "org.ekstep.keyboard.eras_icon",
-      src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/eras_icon.png'),
-      assetId: "org.ekstep.keyboard.eras_icon",
-      type: "image",
-      preload: true
-    }, {
-      id: "org.ekstep.keyboard.language_icon",
-      src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/language_icon.png'),
-      assetId: "org.ekstep.keyboard.language_icon",
-      type: "image",
-      preload: true
-    }, {
-      id: "org.ekstep.keyboard.hide_keyboard",
-      src: ecEditor.resolvePluginResource($scope.keyboardPluginInstance.id, $scope.keyboardPluginInstance.ver, 'renderer/assets/keyboard.svg'),
-      assetId: "org.ekstep.keyboard.hide_keyboard",
-      type: "image",
-      preload: true
-    }];
-    _.each(defaultMedia, function (obj) {
-      var mediaObject = {
-        "type" : "default",
-        "value" : obj
-      };
-      $scope.questionUnitInstance.setMedia(mediaObject);
-    })
   }
   /**
    * for edit flow
@@ -119,10 +86,9 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
   $scope.editFtbQuestion = function (event, data) {
     var qdata = data.data;
     $scope.ftbFormData.question = qdata.question;
-    _.each(qdata.media, function (obj) {
-      $scope.questionUnitInstance.setMedia(obj);
-    })
-    $scope.ftbFormData.media = $scope.questionUnitInstance.getAllMedia();
+    $scope.pluginInstance.setAllMedia(qdata.media);
+    $scope.ftbFormData.media = $scope.pluginInstance.getAllMedia();
+
     $scope.keyboardConfig = qdata.question.keyboardConfig;
     _.each(qdata.media, function (mediaObject, index) {
       $scope.questionMedia[mediaObject.type] = mediaObject;
@@ -220,12 +186,13 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
         "value" : data
       }, oldMedia = {};
       !_.isEmpty($scope.ftbFormData.question[mediaType]) ? oldMedia = $scope.questionMedia[mediaType] : oldMedia = undefined;
-      $scope.questionUnitInstance.setMedia(newMedia, oldMedia);
+      $scope.pluginInstance.setMedia(newMedia, oldMedia, function(src){
+        $scope.ftbFormData.question[mediaType] = src;
+        data.assetMedia.type == 'audio' ? $scope.ftbFormData.question.audioName = data.assetMedia.name : '';
+        $scope.questionMedia[mediaType] = data.assetMedia;
+      });
 
-      $scope.ftbFormData.question[mediaType] = org.ekstep.contenteditor.mediaManager.getMediaOriginURL(data.assetMedia.src);
-      data.assetMedia.type == 'audio' ? $scope.ftbFormData.question.audioName = data.assetMedia.name : '';
-      $scope.questionMedia[mediaType] = data.assetMedia;
-      $scope.ftbFormData.media = $scope.questionUnitInstance.getAllMedia();
+      $scope.ftbFormData.media = $scope.pluginInstance.getAllMedia();
 
       if(!$scope.$$phase) {
         $scope.$digest()
@@ -244,8 +211,8 @@ angular.module('ftbApp', ['org.ekstep.question']).controller('ftbQuestionFormCon
   $scope.deleteMedia = function (type, index, mediaType) {
     var telemetryObject = { type: 'TOUCH', id: 'button', target: { id: 'questionunit-ftb-delete-' + mediaType, ver: '', type: 'button' } };
     
-    $scope.questionUnitInstance.removeMedia('id', $scope.questionMedia[mediaType].id);
-    $scope.ftbFormData.media = $scope.questionUnitInstance.getAllMedia();
+    $scope.pluginInstance.removeMedia('id', $scope.questionMedia[mediaType].id);
+    $scope.ftbFormData.media = $scope.pluginInstance.getAllMedia();
     $scope.ftbFormData.question[mediaType] = '';
     $scope.questionMedia = {};
     $scope.generateTelemetry(telemetryObject)
