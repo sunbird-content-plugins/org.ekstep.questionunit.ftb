@@ -77,11 +77,8 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
     });
     //compare two array
     /*istanbul ignore else*/
-    if (this._question.config.evalUnordered) {
-      correctAnswer = (_.isEqual(answerArray, _.intersection(answerArray, this._question.data.answer)));
-    }
-    else { // eslint-disable-line no-undef
-      correctAnswer = (_.isEqual(answerArray, this._question.data.answer));
+    if (_.isEqual(answerArray, this._question.data.answer)) { // eslint-disable-line no-undef
+      correctAnswer = true;
     }
     // Calculate partial score
     var correctAnswersCount = 0;
