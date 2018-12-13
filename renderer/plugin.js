@@ -77,7 +77,7 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
     });
     //compare two array
     /*istanbul ignore else*/
-    if (this._question.config.eval_unordered) {
+    if (this._question.config.evalUnordered) {
       correctAnswer = (_.isEqual(answerArray, _.intersection(answerArray, this._question.data.answer)));
     }
     else { // eslint-disable-line no-undef
