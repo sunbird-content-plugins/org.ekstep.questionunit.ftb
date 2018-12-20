@@ -86,7 +86,6 @@ org.ekstep.questionunitFTB.RendererPlugin = org.ekstep.contentrenderer.questionU
       correctAnswersCount = _.reduce(_.map(this._question.data.answer, function(ans, index){
         return (ans.toLowerCase().trim() == answerArray[index].toLowerCase().trim()) ? 1 : 0;
       }), function (score, s) { return score + s; }, 0);
-      ;
     }
 
     var questionScore;
